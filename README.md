@@ -1,60 +1,95 @@
-# PokeFinder 3.4.0
+# PokeFinder
 
-Guia de fã da N. J. Softwares para consultar códigos, itens, máquinas, dicas, detonados e Pokédex por edição. Android 10 ou posterior. O catálogo, as imagens e os guias funcionam offline. A conexão do app é usada pela consulta às releases públicas do GitHub.
+[Português](#português) · [English](#english) · [Fontes e créditos / Sources and credits](#credits)
 
-## Compilar
+## Português
 
-Extraia o ZIP e abra a pasta `PokeFinder` no Android Studio. Use JDK 17 e Android SDK 36. Na primeira sincronização, o Gradle baixa as dependências. Em seguida, use **Run** ou:
+O **PokeFinder** é um projeto independente de fã, desenvolvido pela **N. J. Softwares** para aprender desenvolvimento Android, organização de catálogos offline e design de interfaces. O app reúne e organiza informações já disponíveis na internet, complementadas por guias e arquivos de referência fornecidos ao projeto. As fontes estão listadas abaixo e os créditos também podem ser consultados no app.
 
-```powershell
-.\gradlew.bat :app:assembleDebug
-```
+### O que você encontra no app
 
-O APK sai em `app/build/outputs/apk/debug/app-debug.apk`. O projeto Gradle e o rótulo no Android usam PokeFinder. O identificador de produção permanece `com.njsoftwares.pokecodefinder`. A compilação de teste usa `com.njsoftwares.pokecodefinder.debug` e pode atualizar o APK de teste 3.3 quando a assinatura é a mesma.
+- **Códigos e dicas** organizados por edição, com instruções para inserir cheats no RetroArch, mGBA, melonDS Android e em dispositivos compatíveis com consoles físicos.
+- **Itens, TMs e HMs** com descrições e, nas tabelas disponíveis, os Pokémon compatíveis com cada máquina.
+- **Detonados e Pokédex** com cobertura que varia conforme a edição, fichas de Pokémon, imagens e animações quando disponíveis.
+- **Guia inicial** que apresenta as seções e pode ser revisto no menu **Como usar**.
 
-## Colocar o código no GitHub
+O catálogo, os guias e as imagens incluídas no app funcionam offline. A verificação opcional de atualizações consulta as releases públicas do GitHub e abre a página da versão para download manual. [Releases do PokeFinder](https://github.com/NiltonJr1994/pokefinder/releases)
 
-1. Clone o [repositório do projeto](https://github.com/NiltonJr1994/pokefinder) com acesso à sua conta.
-2. Copie o **conteúdo** da pasta `PokeFinder` extraída para a raiz do clone. Revise quaisquer arquivos já existentes no clone antes de substituí-los. A raiz deve conter `settings.gradle.kts`, `app` e `gradlew.bat`.
-3. Revise `git status` e o que será enviado. O ZIP inclui os catálogos e os recursos visuais usados pelo app. Confira os direitos de redistribuição antes de tornar esses arquivos públicos.
-4. Faça o commit e envie a partir da sua máquina.
+### Compilar e testar
 
-```powershell
-git add .
-git commit -m "Add PokeFinder Android 3.4.0"
-git push -u origin HEAD
-```
+O app usa **Kotlin, Jetpack Compose e Material 3** e funciona no **Android 10 ou posterior**. Abra a raiz do repositório no Android Studio com o **JDK 17** e o **Android SDK 36**, aguarde a sincronização e use **Run**. Para gerar o APK de teste pelo terminal, execute um dos comandos abaixo.
 
-Mantenha as chaves de assinatura, as senhas e `local.properties` fora do repositório. O [CHANGELOG.md](CHANGELOG.md) descreve as alterações da versão.
-
-## Publicar uma atualização
-
-1. Em `app/build.gradle.kts`, aumente `versionCode` e defina `versionName` no formato `MAJOR.MINOR.PATCH`. Para a próxima atualização após 3.4.0, um exemplo é `versionCode = 34001` e `versionName = "3.4.1"`.
-2. Gere um **APK release assinado** no Android Studio com a chave de distribuição do mesmo pacote. Uma instalação de produção precisa da mesma assinatura das versões de produção anteriores. Use o mesmo canal de assinatura ao testar uma atualização sobre uma instalação existente. [Assinatura de apps Android](https://developer.android.com/studio/publish/app-signing)
-3. Envie o commit da versão ao GitHub e crie uma release pública apontando para ele. Use uma tag como `v3.4.1`, publique como release estável mais recente e anexe o APK assinado. O arquivo deve estar na seção **Assets** da release. [Documentação de releases do GitHub](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
-4. Na versão anterior do app, vá a **Atualizações → Verificar agora**. Ao detectar uma versão maior, o app mostra a tag e abre a página da release para o usuário escolher o download e a instalação.
-
-O verificador consulta `https://api.github.com/repos/NiltonJr1994/pokefinder/releases/latest` por HTTPS, sem credenciais. O repositório e a release precisam ser públicos. Ele consulta ao abrir ou voltar ao app quando a última consulta estiver fora do intervalo de 12 horas. Em falha, a próxima tentativa automática fica para depois de 30 minutos. O botão manual faz a consulta na hora e a opção automática pode ser desligada. O GitHub recebe a conexão e a versão do app no agente da requisição. [Endpoint de releases do GitHub](https://docs.github.com/en/rest/releases/releases#get-the-latest-release)
-
-Na consulta pública feita para esta entrega, tanto o repositório quanto o endpoint de release retornaram HTTP 404. Quando a release estiver pública, faça a verificação manual para confirmar a publicação.
-
-## Validação no Poco X7 Pro
-
-No emulador Android 16, a instalação sobre o 3.3 passou. Foram verificados o onboarding, o acesso às instruções de cheats, as dicas de Emerald e os estados de atualização com e sem rede. A resposta de uma versão nova foi testada com dados simulados, pois o endpoint público respondeu HTTP 404.
-
-| Passo | Resultado esperado |
+| Sistema | Comando |
 | --- | --- |
-| Instale e abra pela primeira vez | O Android mostra **PokeFinder**. A introdução tem quatro telas. |
-| Abra **Como usar** no menu e toque em **Rever introdução** | O guia pode ser revisto. |
-| Em Yellow, entre em **Códigos → Como inserir cheats** | A página mostra RetroArch, mGBA, melonDS Android e console físico. |
-| Selecione **Emerald**, **FireRed** ou **SoulSilver** e abra **Dicas** | Aparecem instruções para aquela edição, com controles do console ou equivalentes no emulador. |
-| Abra **Atualizações → Verificar agora** com conexão | O app informa a situação da release pública. |
-| Repita a consulta em modo avião e abra a Pokédex | A consulta informa a falha de conexão e o catálogo local continua disponível. |
+| Windows (PowerShell) | `.gradlew.bat :app:assembleDebug` |
+| macOS ou Linux | `./gradlew :app:assembleDebug` |
 
-## Nome e distribuição pública
+O APK gerado fica em `app/build/outputs/apk/debug/app-debug.apk`. Consulte o [histórico de alterações](CHANGELOG.md) para detalhes da versão.
 
-A busca preliminar encontrou outra ferramenta de Pokémon chamada **PokeFinder**, de Admiral-Fish. O nome idêntico e o público semelhante criam risco de confusão. No Brasil, o art. 124, XIX, da Lei 9.279/1996 trata da reprodução ou imitação de marca registrada para produtos ou serviços relacionados quando há possibilidade de confusão ou associação. A consulta disponível não permitiu confirmar a situação de registros no INPI. Antes de publicar ou pedir registro, faça uma busca por grafias semelhantes no INPI e avalie o resultado no contexto de software. A questão dos nomes, sprites e imagens de Pokémon também precisa ser avaliada separadamente. [Projeto Admiral-Fish/PokeFinder](https://github.com/Admiral-Fish/PokeFinder) · [INPI](https://www.gov.br/inpi/pt-br/servicos/marcas) · [Lei 9.279/1996](https://www.planalto.gov.br/ccivil_03/leis/l9279.htm) · [Pokémon Support](https://support.pokemon.com/hc/en-us/articles/360000634094-Can-I-use-Pok%C3%A9mon-images-or-materials)
+### Projeto de fã e direitos
 
-As fontes do catálogo e do design também estão em **Créditos** dentro do app.
+O PokeFinder é um projeto educacional e independente, sem afiliação ou endosso da The Pokémon Company, Nintendo, Creatures ou GAME FREAK. As marcas, personagens, imagens e demais materiais de terceiros pertencem aos respectivos titulares e estão sujeitos às suas condições de uso. Existe também uma ferramenta homônima de manipulação de RNG, mantida separadamente por Admiral-Fish. [Orientação do Pokémon Support sobre materiais da franquia](https://support.pokemon.com/hc/en-us/articles/360000634094-Can-I-use-Pok%C3%A9mon-images-or-materials) · [Admiral-Fish/PokeFinder](https://github.com/Admiral-Fish/PokeFinder)
 
-"# pokefinder" 
+## English
+
+**PokeFinder** is an independent fan project developed by **N. J. Softwares** to learn Android development, offline catalog organization, and interface design. It collects and organizes information already available online, supplemented by guides and reference files provided to the project. Sources are listed below, and credits are also available in the app.
+
+### What’s in the app
+
+- **Cheat codes and tips** by game edition, with instructions for entering cheats in RetroArch, mGBA, melonDS Android, and on compatible physical-console devices.
+- **Items, TMs, and HMs** with descriptions and, where compatibility tables are available, the Pokémon that can use each machine.
+- **Walkthroughs and a Pokédex** with coverage that varies by edition, Pokémon profiles, images, and animations where available.
+- **A quick-start guide** that introduces each section and can be reopened from the **Como usar** (How to use) menu.
+
+The catalog, guides, and bundled images work offline. The optional update check looks up public GitHub releases and opens the release page for manual download. [PokeFinder releases](https://github.com/NiltonJr1994/pokefinder/releases)
+
+### Build and test
+
+The app uses **Kotlin, Jetpack Compose, and Material 3** and runs on **Android 10 or later**. Open the repository root in Android Studio with **JDK 17** and **Android SDK 36**, wait for Gradle to sync, and select **Run**. To build a debug APK from the terminal, run the command for your platform.
+
+| Platform | Command |
+| --- | --- |
+| Windows (PowerShell) | `.gradlew.bat :app:assembleDebug` |
+| macOS or Linux | `./gradlew :app:assembleDebug` |
+
+The resulting APK is at `app/build/outputs/apk/debug/app-debug.apk`. See the [changelog](CHANGELOG.md) for release details.
+
+### Fan project and rights
+
+PokeFinder is an independent educational project with no affiliation with or endorsement from The Pokémon Company, Nintendo, Creatures, or GAME FREAK. Third-party trademarks, characters, images, and other materials belong to their respective rights holders and are subject to their terms of use. Admiral-Fish maintains a separate RNG tool with the same name. [Pokémon Support guidance on franchise materials](https://support.pokemon.com/hc/en-us/articles/360000634094-Can-I-use-Pok%C3%A9mon-images-or-materials) · [Admiral-Fish/PokeFinder](https://github.com/Admiral-Fish/PokeFinder)
+
+<a id="credits"></a>
+
+## Fontes e créditos / Sources and credits
+
+### Inspiração visual / Visual inspiration
+
+- **Junior Saraiva**, *Pokedex | Pokemon App*. Referência visual para a Pokédex, adaptada à identidade do PokeFinder. / Visual reference for the Pokédex, adapted to PokeFinder’s visual identity. [Behance](https://www.behance.net/gallery/220086377/Pokedex-Pokemon-App)
+
+### Catálogo, sprites e guias / Catalog, sprites, and guides
+
+- **PokéAPI**. Dados de espécies, encontros, itens e máquinas, além de sprites de Pokémon e itens e animações de Crystal. / Species, encounter, item, and machine data, plus Pokémon and item sprites and Crystal animations. [Dados CSV / CSV data](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) · [Sprites](https://github.com/PokeAPI/sprites)
+- **Pokémon Showdown**. GIFs ilustrativos distribuídos no repositório de sprites da PokéAPI. / Illustrative GIFs distributed through the PokéAPI sprites repository. [GIFs do Showdown / Showdown GIFs](https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/other/showdown)
+- **Pokémon Database**. Catálogo e imagens de itens e tabelas de TMs, HMs e compatibilidade em Red, Blue e Yellow. / Item catalog and images, and TM, HM, and compatibility tables for Red, Blue, and Yellow. [Itens / Items](https://pokemondb.net/item/all) · [TMs](https://pokemondb.net/red-blue/tms) · [HMs](https://pokemondb.net/red-blue/hms)
+- **IGN**. Guia de itens de Red, Blue e Yellow. / Item guide for Red, Blue, and Yellow. [IGN Items Guide](https://www.ign.com/wikis/pokemon-red-blue-yellow-version/Items)
+- **Bulbapedia**. Detonados, índices de itens e referências para dicas. / Walkthroughs, item indexes, and references for gameplay tips. [Detonados / Walkthroughs](https://bulbapedia.bulbagarden.net/wiki/Category:Walkthroughs) · [Yellow](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Yellow) · [Red & Blue](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Red_and_Blue) · [Gold & Silver](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Gold_and_Silver) · [Itens da geração II / Generation II items](https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_in_Generation_II) · [Itens da geração III / Generation III items](https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_in_Generation_III) · [Odd Egg](https://bulbapedia.bulbagarden.net/wiki/Odd_Egg) · [Clear Bell](https://bulbapedia.bulbagarden.net/wiki/Clear_Bell) · [VS Seeker](https://bulbapedia.bulbagarden.net/wiki/VS_Seeker) · [Voltorb Flip](https://bulbapedia.bulbagarden.net/wiki/Voltorb_Flip) · [Haircut brothers](https://bulbapedia.bulbagarden.net/wiki/Haircut_brothers)
+- **PokéPC**. Fichas e disponibilidade de Pokémon em Yellow, consultadas em uma cópia fornecida da página. / Pokémon profiles and availability in Yellow, consulted in a supplied copy of the page. [PokéPC](https://pokepc.net/)
+- **Nintendo**, *Pokémon Trainer’s Guide — Special Pikachu Edition*. Guia consultado no PDF fornecido. / Guide consulted in the supplied PDF.
+- **Pokémon Checklist**, *Pokemon Yellow Kanto Pokedex*. Material consultado no PDF fornecido. / Reference consulted in the supplied PDF.
+- **Pokémon Mythology**, *Detonado Pokémon Yellow: Guia Completo*. Detonado consultado em cópia fornecida. / Walkthrough consulted in a supplied copy.
+
+### Códigos e instruções / Cheat codes and instructions
+
+- **pret/pokeyellow**. Constantes e índices internos de Yellow. / Yellow’s internal constants and indexes. [Constantes / Constants](https://github.com/pret/pokeyellow/tree/master/constants)
+- **Glitch City Wiki**, **Psypoke** e **Pokémon Mythology**. Referências de códigos GameShark. / GameShark code references. [Glitch City Wiki](https://nintyconservation.github.io/glitchcity.wiki/glitchcity.wiki/Pok%C3%A9mon_Red%2C_Blue_and_Yellow_GameShark_codes.html) · [Psypoke](https://psypokes.com/rby/ygameshark.php) · [Pokémon Mythology](https://www.pokemythology.net/conteudo/cheats/redblueyellow.htm)
+- **GameHacking.org**. Códigos por edição. / Codes by edition. [Crystal](https://gamehacking.org/game/11386) · [Emerald](https://gamehacking.org/game/5630) · [FireRed](https://gamehacking.org/game/5633) · [LeafGreen](https://gamehacking.org/game/5634) · [HeartGold](https://gamehacking.org/game/23371) · [SoulSilver](https://gamehacking.org/game/23382)
+- **PokémonCoders** e **PokeMundo**. O catálogo legado registra os dois nomes com o mesmo link para códigos de Crystal. / The legacy catalog lists both names with the same link for Crystal cheats. [Pokémon Crystal Cheats](https://www.pokemoncoders.com/pokemon-crystal-cheats/)
+- **Voxel / TecMundo**, **GameFAQs** e arquivos fornecidos ao projeto. Referências para Emerald e SoulSilver, além de listas fornecidas para FireRed (GBA) e HeartGold e SoulSilver (DS). / References for Emerald and SoulSilver, plus supplied code lists for FireRed (GBA) and HeartGold and SoulSilver (DS). [Voxel / TecMundo — Emerald](https://www.estadao.com.br/tecmundo/voxel/282528-pokemon-emerald-lista-master-codes-codigos-cheats-jogo-gba/) · [GameFAQs — SoulSilver](https://gamefaqs.gamespot.com/boards/960100-pokemon-soulsilver-version/53938430)
+- **Libretro**, **mGBA**, **melonDS Android** e **Datel**. Referências para usar cheats em emuladores e no Action Replay para GBA/DS. / References for using cheats in emulators and with Action Replay for GBA/DS. [Libretro](https://docs.libretro.com/guides/cheat-codes/) · [mGBA](https://github.com/mgba-emu/mgba/blob/master/src/platform/qt/CheatsView.cpp) · [melonDS Android](https://github.com/rafaelvcaetano/melonDS-android/wiki/Cheats) · [Manual Datel / Datel manual](https://uk.codejunkies.com/support_downloads/ARMAX_GBA_DS_English.pdf)
+
+### Referências técnicas / Technical references
+
+- **Android Developers**. Interface e compilação do app. / App UI and build. [Jetpack Compose](https://developer.android.com/develop/ui/compose) · [Assinatura de apps / App signing](https://developer.android.com/studio/publish/app-signing)
+- **GitHub Docs**. Consulta da última release pública. / Looking up the latest public release. [API de releases / Releases API](https://docs.github.com/en/rest/releases/releases#get-the-latest-release)
+
+**Identidade visual, adaptação e desenvolvimento / Visual identity, adaptation, and development** — N. J. Softwares
