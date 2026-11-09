@@ -1,6 +1,6 @@
 # PokeFinder
 
-[Português](#português) · [English](#english) · [Fontes e créditos / Sources and credits](#credits)
+[Português](#português) · [English](#english) · [Fontes e créditos / Sources and credits](#credits) · [Contato / Contact](#contact)
 
 ## Português
 
@@ -92,4 +92,19 @@ PokeFinder is an independent educational project with no affiliation with or end
 - **Android Developers**. Interface e compilação do app. / App UI and build. [Jetpack Compose](https://developer.android.com/develop/ui/compose) · [Assinatura de apps / App signing](https://developer.android.com/studio/publish/app-signing)
 - **GitHub Docs**. Consulta da última release pública. / Looking up the latest public release. [API de releases / Releases API](https://docs.github.com/en/rest/releases/releases#get-the-latest-release)
 
+### Uso de IA / Use of AI
+
+- **ChatGPT**. Usado para organizar a arquitetura do projeto. / Used to organize the project architecture.
+- **Claude AI**. Usado para desenvolver a lógica do projeto. / Used to develop the project logic.
+
 **Identidade visual, adaptação e desenvolvimento / Visual identity, adaptation, and development** — N. J. Softwares
+
+<a id="contact"></a>
+
+## Contato / Contact
+
+**N. J. Softwares**
+
+Para relatar problemas ou sugerir melhorias no PokeFinder, use a seção de issues do projeto. / To report bugs or suggest improvements to PokeFinder, use the project’s issue tracker. [PokeFinder Issues](https://github.com/NiltonJr1994/pokefinder/issues)
+
+Perfil do mantenedor no GitHub. / Maintainer’s GitHub profile. [@NiltonJr1994](https://github.com/NiltonJr1994)
