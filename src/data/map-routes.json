@@ -1,0 +1,916 @@
+{
+  "kanto": [
+    {
+      "id": "pallet",
+      "title": "Pallet Town",
+      "locations": [
+        "pallet-town"
+      ],
+      "goal": "Receber o primeiro Pokémon",
+      "how": "Tente sair pelo norte e acompanhe o Professor Oak ao laboratório.",
+      "items": [
+        [
+          "Potion",
+          "Quarto do jogador",
+          "Retire a Potion do computador.",
+          false
+        ]
+      ],
+      "npcs": [
+        [
+          "Professor Oak",
+          "Laboratório",
+          "Receba o primeiro Pokémon no laboratório."
+        ]
+      ]
+    },
+    {
+      "id": "route1",
+      "title": "Route 1",
+      "locations": [
+        "kanto-route-1"
+      ],
+      "goal": "Chegar a Viridian City",
+      "how": "Siga para o norte pela Route 1.",
+      "items": [
+        [
+          "Potion",
+          "Funcionário do Poké Mart",
+          "Converse com o funcionário na rota.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "viridian",
+      "title": "Viridian City",
+      "locations": [
+        "viridian-city",
+        "kanto-route-2",
+        "viridian-forest"
+      ],
+      "goal": "Entregar a encomenda de Oak",
+      "how": "Retire o pacote no Poké Mart, entregue-o em Pallet Town e depois siga pela Route 2 e Viridian Forest.",
+      "items": [
+        [
+          "Oak’s Parcel",
+          "Poké Mart",
+          "Converse com o atendente.",
+          false
+        ],
+        [
+          "Potion",
+          "Viridian City · saída norte",
+          "Examine a árvore pequena no canto noroeste da cidade.",
+          true
+        ]
+      ],
+      "npcs": [
+        [
+          "Atendente do Poké Mart",
+          "Poké Mart",
+          "O atendente entrega a encomenda para Oak."
+        ]
+      ]
+    },
+    {
+      "id": "pewter",
+      "title": "Pewter City",
+      "locations": [
+        "pewter-city",
+        "kanto-route-3",
+        "mt-moon",
+        "kanto-route-4"
+      ],
+      "goal": "Vencer Brock",
+      "how": "Ganhe a Boulder Badge e siga pela Route 3 e pelo Mt. Moon.",
+      "items": []
+    },
+    {
+      "id": "cerulean",
+      "title": "Cerulean City",
+      "locations": [
+        "cerulean-city",
+        "kanto-route-24",
+        "kanto-route-25"
+      ],
+      "goal": "Vencer Misty e visitar Bill",
+      "how": "Atravesse a Nugget Bridge, ajude Bill para obter o S.S. Ticket e vença Misty.",
+      "items": [],
+      "npcs": [
+        [
+          "Bill",
+          "Sea Cottage, Route 25",
+          "Ajude Bill com o computador para receber o S.S. Ticket."
+        ]
+      ]
+    },
+    {
+      "id": "vermilion",
+      "title": "Vermilion City",
+      "locations": [
+        "vermilion-city",
+        "kanto-route-5",
+        "kanto-route-6",
+        "kanto-route-11",
+        "digletts-cave"
+      ],
+      "goal": "Obter Cut e vencer Lt. Surge",
+      "how": "Embarque no S.S. Anne com o bilhete, ajude o capitão e use Cut para acessar o ginásio.",
+      "items": [
+        [
+          "HM01 · Cut",
+          "S.S. Anne",
+          "Ajude o capitão em sua cabine.",
+          false
+        ]
+      ],
+      "npcs": [
+        [
+          "Capitão do S.S. Anne",
+          "Cabine do capitão",
+          "Converse com o capitão para obter Cut."
+        ]
+      ]
+    },
+    {
+      "id": "lavender",
+      "title": "Lavender Town",
+      "locations": [
+        "lavender-town",
+        "kanto-route-9",
+        "kanto-route-10",
+        "rock-tunnel",
+        "kanto-route-8"
+      ],
+      "goal": "Atravessar Rock Tunnel",
+      "how": "Saia de Cerulean pela Route 9. Use Flash se disponível e atravesse o túnel em direção a Lavender.",
+      "items": []
+    },
+    {
+      "id": "celadon",
+      "title": "Celadon City",
+      "locations": [
+        "celadon-city",
+        "kanto-route-7",
+        "kanto-route-16"
+      ],
+      "goal": "Vencer Erika e obter o Silph Scope",
+      "how": "Entre no esconderijo atrás do pôster do Game Corner. Derrote Giovanni e pegue o Silph Scope.",
+      "items": [
+        [
+          "Coin Case",
+          "Restaurante",
+          "Converse com o homem no restaurante.",
+          false
+        ],
+        [
+          "Coin",
+          "Rocket Game Corner",
+          "Investigue o chão entre as máquinas. Algumas moedas ficam ocultas.",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "tower",
+      "title": "Pokémon Tower",
+      "locations": [
+        "pokemon-tower"
+      ],
+      "goal": "Resgatar Mr. Fuji",
+      "how": "Volte à torre com o Silph Scope, avance até o topo e receba a Poké Flute.",
+      "items": [],
+      "npcs": [
+        [
+          "Mr. Fuji",
+          "Pokémon Tower",
+          "Resgate Mr. Fuji e siga até a casa dele para receber a Poké Flute."
+        ]
+      ]
+    },
+    {
+      "id": "saffron",
+      "title": "Saffron City",
+      "locations": [
+        "saffron-city"
+      ],
+      "goal": "Libertar a Silph Co. e vencer Sabrina",
+      "how": "Libere a entrada de Saffron, atravesse a Silph Co. e vença Giovanni. Depois, desafie Sabrina.",
+      "items": [
+        [
+          "Master Ball",
+          "Silph Co.",
+          "Fale com o presidente depois de derrotar Giovanni.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "fuchsia",
+      "title": "Fuchsia City",
+      "locations": [
+        "fuchsia-city",
+        "kanto-route-12",
+        "kanto-route-13",
+        "kanto-route-14",
+        "kanto-route-15",
+        "kanto-route-17",
+        "kanto-route-18",
+        "kanto-safari-zone"
+      ],
+      "goal": "Obter Surf e Strength e vencer Koga",
+      "how": "Use a Poké Flute em Snorlax, atravesse uma das rotas a Fuchsia e explore a Safari Zone. Entregue os Gold Teeth ao guarda para obter Strength. Em seguida, enfrente Koga.",
+      "items": [
+        [
+          "HM03 · Surf",
+          "Secret House",
+          "Chegue à Secret House na Safari Zone.",
+          false
+        ],
+        [
+          "Gold Teeth",
+          "Safari Zone",
+          "Recolha os dentes perto da Secret House.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "cinnabar",
+      "title": "Cinnabar Island",
+      "locations": [
+        "cinnabar-island",
+        "kanto-sea-route-19",
+        "kanto-sea-route-20",
+        "kanto-sea-route-21",
+        "seafoam-islands",
+        "pokemon-mansion"
+      ],
+      "goal": "Obter a Secret Key e vencer Blaine",
+      "how": "Atravesse o mar com Surf e procure a Secret Key na Pokémon Mansion.",
+      "items": [
+        [
+          "Secret Key",
+          "Pokémon Mansion",
+          "Explore o porão da mansão.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "badge8",
+      "title": "Viridian Gym",
+      "locations": [
+        "kanto-route-22"
+      ],
+      "goal": "Vencer Giovanni",
+      "how": "Volte ao ginásio de Viridian depois de reunir as outras sete insígnias.",
+      "items": []
+    },
+    {
+      "id": "league",
+      "title": "Indigo Plateau",
+      "locations": [
+        "kanto-route-23",
+        "kanto-victory-road-1",
+        "kanto-victory-road-2"
+      ],
+      "goal": "Vencer a Liga Pokémon",
+      "how": "Passe pela conferência das oito insígnias, atravesse Victory Road com Strength e enfrente a Elite Four e o Campeão.",
+      "items": []
+    },
+    {
+      "id": "cerulean-cave",
+      "title": "Cerulean Cave",
+      "locations": [
+        "cerulean-cave"
+      ],
+      "goal": "Encontrar Mewtwo",
+      "how": "Depois da Liga, explore a caverna a noroeste de Cerulean. Em FireRed e LeafGreen, complete antes a missão de Celio nas Sevii Islands.",
+      "items": []
+    }
+  ],
+  "johto": [
+    {
+      "id": "new-bark",
+      "title": "New Bark Town",
+      "locations": [
+        "new-bark-town",
+        "johto-route-29"
+      ],
+      "goal": "Escolher o primeiro Pokémon",
+      "how": "Fale com Professor Elm e siga pela Route 29 rumo a Cherrygrove.",
+      "items": [],
+      "npcs": [
+        [
+          "Professor Elm",
+          "Laboratório",
+          "Fale com Elm para escolher um Pokémon e começar a jornada."
+        ]
+      ]
+    },
+    {
+      "id": "cherrygrove",
+      "title": "Cherrygrove City",
+      "locations": [
+        "cherrygrove-city",
+        "johto-route-30",
+        "johto-route-31"
+      ],
+      "goal": "Visitar Mr. Pokémon",
+      "how": "Siga pela Route 30, receba o Mystery Egg e volte ao laboratório de Elm. Depois avance para Violet.",
+      "items": [
+        [
+          "Potion",
+          "Route 30 · canteiro",
+          "Inspecione o canteiro a leste da placa Trainer Tips.",
+          true
+        ]
+      ],
+      "npcs": [
+        [
+          "Mr. Pokémon",
+          "Casa na Route 30",
+          "Receba o Mystery Egg e leve-o a Elm."
+        ]
+      ]
+    },
+    {
+      "id": "violet",
+      "title": "Violet City",
+      "locations": [
+        "violet-city",
+        "sprout-tower",
+        "johto-route-32"
+      ],
+      "goal": "Vencer Falkner",
+      "how": "Passe pela Sprout Tower, enfrente Falkner e siga para Union Cave.",
+      "items": [
+        [
+          "Mystery Egg",
+          "Violet City",
+          "Depois da primeira insígnia, procure o assistente de Elm.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "azalea",
+      "title": "Azalea Town",
+      "locations": [
+        "azalea-town",
+        "union-cave",
+        "slowpoke-well"
+      ],
+      "goal": "Resgatar os Slowpoke e vencer Bugsy",
+      "how": "Fale com Kurt e derrote a Equipe Rocket no Slowpoke Well. Em seguida, desafie Bugsy.",
+      "items": [],
+      "npcs": [
+        [
+          "Kurt",
+          "Casa de Kurt",
+          "Converse com Kurt para iniciar o resgate no Slowpoke Well."
+        ]
+      ]
+    },
+    {
+      "id": "ilex",
+      "title": "Ilex Forest",
+      "locations": [
+        "ilex-forest",
+        "johto-route-34"
+      ],
+      "goal": "Obter Cut",
+      "how": "Ajude a recuperar o Farfetch’d perdido e receba Cut para atravessar a floresta.",
+      "items": [
+        [
+          "HM01 · Cut",
+          "Ilex Forest",
+          "Fale com o responsável pelos Farfetch’d após recuperá-los.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "goldenrod",
+      "title": "Goldenrod City",
+      "locations": [
+        "goldenrod-city",
+        "johto-route-35",
+        "johto-route-36",
+        "johto-route-37"
+      ],
+      "goal": "Vencer Whitney e liberar o caminho",
+      "how": "Receba a insígnia de Whitney, obtenha a SquirtBottle e use-a em Sudowoodo na Route 36.",
+      "items": []
+    },
+    {
+      "id": "ecruteak",
+      "title": "Ecruteak City",
+      "locations": [
+        "ecruteak-city",
+        "burned-tower",
+        "johto-route-38",
+        "johto-route-39"
+      ],
+      "goal": "Investigar Burned Tower e vencer Morty",
+      "how": "Avance no evento da Burned Tower e conquiste a Fog Badge. Obtenha Surf antes de ir para Cianwood.",
+      "items": []
+    },
+    {
+      "id": "olivine",
+      "title": "Olivine City",
+      "locations": [
+        "olivine-city",
+        "johto-sea-route-40",
+        "johto-sea-route-41"
+      ],
+      "goal": "Visitar o farol",
+      "how": "Encontre Jasmine no farol e siga de Surf para buscar remédio em Cianwood.",
+      "items": [],
+      "npcs": [
+        [
+          "Jasmine",
+          "Glitter Lighthouse",
+          "Ela está cuidando de Amphy e precisa do remédio da farmácia."
+        ]
+      ]
+    },
+    {
+      "id": "cianwood",
+      "title": "Cianwood City",
+      "locations": [
+        "cianwood-city"
+      ],
+      "goal": "Buscar o remédio e vencer Chuck",
+      "how": "Pegue o remédio na farmácia, vença Chuck e retorne a Olivine para entregá-lo.",
+      "items": [
+        [
+          "SecretPotion",
+          "Farmácia",
+          "Converse com o farmacêutico.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "jasmine",
+      "title": "Olivine Gym",
+      "locations": [],
+      "goal": "Vencer Jasmine",
+      "how": "Depois de curar Amphy no farol, desafie Jasmine no ginásio.",
+      "items": []
+    },
+    {
+      "id": "mahogany",
+      "title": "Mahogany Town",
+      "locations": [
+        "mahogany-town",
+        "johto-route-42",
+        "johto-route-43",
+        "lake-of-rage"
+      ],
+      "goal": "Investigar o Lake of Rage e vencer Pryce",
+      "how": "Encontre o Gyarados vermelho, siga Lance até o esconderijo Rocket e depois enfrente Pryce.",
+      "items": []
+    },
+    {
+      "id": "radio",
+      "title": "Radio Tower",
+      "locations": [],
+      "goal": "Libertar a Radio Tower",
+      "how": "Volte a Goldenrod quando a Equipe Rocket tomar a torre. Recupere a chave no subterrâneo e salve o diretor.",
+      "items": []
+    },
+    {
+      "id": "blackthorn",
+      "title": "Blackthorn City",
+      "locations": [
+        "blackthorn-city",
+        "ice-path",
+        "johto-route-44",
+        "dragons-den"
+      ],
+      "goal": "Vencer Clair",
+      "how": "Atravesse Ice Path, desafie Clair e vá ao Dragon’s Den para concluir a etapa.",
+      "items": []
+    },
+    {
+      "id": "johto-league",
+      "title": "Indigo Plateau",
+      "locations": [
+        "kanto-route-26",
+        "kanto-route-27",
+        "kanto-victory-road-1",
+        "kanto-victory-road-2"
+      ],
+      "goal": "Vencer a Liga Pokémon",
+      "how": "Pegue a Master Ball com Elm. Atravesse Tohjo Falls e Victory Road até a Liga.",
+      "items": []
+    },
+    {
+      "id": "kanto-johto",
+      "title": "Kanto",
+      "locations": [
+        "vermilion-city"
+      ],
+      "goal": "Iniciar a jornada em Kanto",
+      "how": "Pegue o S.S. Ticket com Elm, embarque em Olivine e comece a coletar as insígnias de Kanto.",
+      "items": []
+    },
+    {
+      "id": "kanto-surge",
+      "title": "Vermilion City",
+      "locations": [
+        "kanto-route-6"
+      ],
+      "goal": "Vencer Lt. Surge",
+      "how": "Entre no ginásio de Vermilion e enfrente Lt. Surge.",
+      "items": []
+    },
+    {
+      "id": "kanto-sabrina",
+      "title": "Saffron City",
+      "locations": [
+        "saffron-city"
+      ],
+      "goal": "Vencer Sabrina",
+      "how": "Use os painéis de teleporte para alcançar Sabrina no ginásio.",
+      "items": []
+    },
+    {
+      "id": "kanto-erika",
+      "title": "Celadon City",
+      "locations": [
+        "celadon-city"
+      ],
+      "goal": "Vencer Erika",
+      "how": "Abra o caminho até o ginásio e desafie Erika.",
+      "items": []
+    },
+    {
+      "id": "kanto-janine",
+      "title": "Fuchsia City",
+      "locations": [
+        "fuchsia-city"
+      ],
+      "goal": "Vencer Janine",
+      "how": "Passe pelas paredes invisíveis do ginásio e enfrente Janine.",
+      "items": []
+    },
+    {
+      "id": "kanto-power",
+      "title": "Power Plant",
+      "locations": [
+        "kanto-power-plant",
+        "cerulean-city",
+        "kanto-route-10"
+      ],
+      "goal": "Restaurar a usina",
+      "how": "Investigue a peça roubada e devolva-a à usina. Use a programação de rádio para acordar Snorlax mais adiante.",
+      "items": []
+    },
+    {
+      "id": "kanto-misty",
+      "title": "Cerulean City",
+      "locations": [
+        "kanto-route-24",
+        "kanto-route-25"
+      ],
+      "goal": "Vencer Misty",
+      "how": "Depois de investigar a usina e a peça, procure Misty no fim da Route 25. Ela voltará ao ginásio.",
+      "items": []
+    },
+    {
+      "id": "kanto-brock",
+      "title": "Pewter City",
+      "locations": [
+        "digletts-cave",
+        "pewter-city"
+      ],
+      "goal": "Vencer Brock",
+      "how": "Use a Poké Flute do rádio para liberar Diglett’s Cave e vá até Pewter.",
+      "items": []
+    },
+    {
+      "id": "kanto-blaine",
+      "title": "Seafoam Islands",
+      "locations": [
+        "seafoam-islands",
+        "cinnabar-island"
+      ],
+      "goal": "Vencer Blaine",
+      "how": "Siga para Seafoam Islands e procure Blaine no ginásio improvisado.",
+      "items": []
+    },
+    {
+      "id": "kanto-blue",
+      "title": "Viridian Gym",
+      "locations": [
+        "viridian-city"
+      ],
+      "goal": "Vencer Blue",
+      "how": "Reúna as outras sete insígnias de Kanto, encontre Blue em Cinnabar e volte a Viridian.",
+      "items": []
+    },
+    {
+      "id": "silver",
+      "title": "Mt. Silver",
+      "locations": [
+        "mt-silver",
+        "mt-silver-cave"
+      ],
+      "goal": "Enfrentar Red",
+      "how": "Com as 16 insígnias, fale com Oak e siga para Mt. Silver.",
+      "items": []
+    }
+  ],
+  "hoenn": [
+    {
+      "id": "littleroot",
+      "title": "Littleroot Town",
+      "locations": [
+        "littleroot-town",
+        "hoenn-route-101"
+      ],
+      "goal": "Escolher o primeiro Pokémon",
+      "how": "Acerte o relógio em casa e ajude Professor Birch na Route 101.",
+      "items": [],
+      "npcs": [
+        [
+          "Professor Birch",
+          "Route 101",
+          "Ajude Birch e fale com ele no laboratório."
+        ]
+      ]
+    },
+    {
+      "id": "oldale",
+      "title": "Oldale Town",
+      "locations": [
+        "oldale-town",
+        "hoenn-route-103"
+      ],
+      "goal": "Enfrentar o rival",
+      "how": "Encontre o rival na Route 103. Volte ao laboratório para receber a Pokédex.",
+      "items": []
+    },
+    {
+      "id": "petalburg",
+      "title": "Petalburg City",
+      "locations": [
+        "petalburg-city",
+        "hoenn-route-102"
+      ],
+      "goal": "Ajudar Wally",
+      "how": "Encontre Norman no ginásio e acompanhe Wally em sua primeira captura.",
+      "items": [],
+      "npcs": [
+        [
+          "Wally",
+          "Ginásio de Petalburg",
+          "Acompanhe Wally até a Route 102."
+        ]
+      ]
+    },
+    {
+      "id": "rustboro",
+      "title": "Rustboro City",
+      "locations": [
+        "rustboro-city",
+        "hoenn-route-104",
+        "petalburg-woods",
+        "hoenn-route-116",
+        "rusturf-tunnel"
+      ],
+      "goal": "Vencer Roxanne e recuperar os Devon Goods",
+      "how": "Atravesse Petalburg Woods, vença Roxanne e resgate Peeko em Rusturf Tunnel.",
+      "items": [
+        [
+          "Potion",
+          "Petalburg Woods",
+          "Inspecione a área leste do bosque, no caminho acessível com Cut.",
+          true
+        ],
+        [
+          "Poké Ball",
+          "Petalburg Woods",
+          "Inspecione o chão na parte oeste do bosque.",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "dewford",
+      "title": "Dewford Town",
+      "locations": [
+        "dewford-town",
+        "hoenn-route-106",
+        "granite-cave"
+      ],
+      "goal": "Visitar Granite Cave e vencer Brawly",
+      "how": "Peça a Mr. Briney para navegar até Dewford. Entregue a carta a Steven em Granite Cave.",
+      "items": [
+        [
+          "HM05 · Flash",
+          "Granite Cave",
+          "Converse com o caminhante na entrada.",
+          false
+        ]
+      ],
+      "npcs": [
+        [
+          "Steven",
+          "Granite Cave",
+          "Entregue a carta do presidente da Devon."
+        ]
+      ]
+    },
+    {
+      "id": "slateport",
+      "title": "Slateport City",
+      "locations": [
+        "slateport-city",
+        "hoenn-route-109",
+        "hoenn-route-110"
+      ],
+      "goal": "Entregar os Devon Goods",
+      "how": "Entregue os bens no Oceanic Museum e siga pela Route 110.",
+      "items": []
+    },
+    {
+      "id": "mauville",
+      "title": "Mauville City",
+      "locations": [
+        "mauville-city",
+        "hoenn-route-111",
+        "hoenn-route-112",
+        "hoenn-route-113",
+        "hoenn-route-114"
+      ],
+      "goal": "Vencer Wattson",
+      "how": "Conquiste a Dynamo Badge, obtenha Rock Smash e avance pelo caminho ao norte.",
+      "items": [
+        [
+          "HM06 · Rock Smash",
+          "Casa em Mauville",
+          "Converse com o homem que entrega a HM.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "fallarbor",
+      "title": "Fallarbor Town",
+      "locations": [
+        "fallarbor-town",
+        "meteor-falls"
+      ],
+      "goal": "Investigar Meteor Falls",
+      "how": "Passe pela Route 114, encontre as equipes na caverna e depois siga para Mt. Chimney.",
+      "items": []
+    },
+    {
+      "id": "lavaridge",
+      "title": "Lavaridge Town",
+      "locations": [
+        "lavaridge-town",
+        "jagged-pass"
+      ],
+      "goal": "Vencer Flannery",
+      "how": "Derrote Maxie no Mt. Chimney, desça por Jagged Pass e desafie Flannery.",
+      "items": []
+    },
+    {
+      "id": "norman",
+      "title": "Petalburg Gym",
+      "locations": [],
+      "goal": "Vencer Norman",
+      "how": "Com quatro insígnias, retorne a Petalburg. Depois da batalha, fale com o pai de Wally para obter Surf.",
+      "items": [
+        [
+          "HM03 · Surf",
+          "Petalburg City",
+          "Receba a HM após vencer Norman.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "fortree",
+      "title": "Fortree City",
+      "locations": [
+        "fortree-city",
+        "hoenn-route-118",
+        "hoenn-route-119",
+        "hoenn-route-120"
+      ],
+      "goal": "Vencer Winona",
+      "how": "Atravesse a Route 118 com Surf, salve o Weather Institute e obtenha Devon Scope de Steven na Route 120.",
+      "items": [],
+      "npcs": [
+        [
+          "Steven",
+          "Route 120",
+          "Receba o Devon Scope para revelar Kecleon."
+        ]
+      ]
+    },
+    {
+      "id": "lilycove",
+      "title": "Lilycove City",
+      "locations": [
+        "lilycove-city",
+        "hoenn-route-121",
+        "hoenn-route-122",
+        "mt-pyre"
+      ],
+      "goal": "Investigar Mt. Pyre e os esconderijos",
+      "how": "Siga os eventos em Mt. Pyre, Magma Hideout, Slateport e Aqua Hideout antes de seguir para Mossdeep.",
+      "items": []
+    },
+    {
+      "id": "mossdeep",
+      "title": "Mossdeep City",
+      "locations": [
+        "mossdeep-city",
+        "hoenn-route-124",
+        "hoenn-route-125",
+        "hoenn-route-127"
+      ],
+      "goal": "Vencer Tate e Liza e obter Dive",
+      "how": "Depois do ginásio, ajude Steven no Space Center e receba Dive.",
+      "items": [
+        [
+          "HM08 · Dive",
+          "Casa de Steven",
+          "Converse com Steven após o evento no Space Center.",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "sootopolis",
+      "title": "Sootopolis City",
+      "locations": [
+        "sootopolis-city",
+        "hoenn-route-126",
+        "hoenn-route-128",
+        "seafloor-cavern",
+        "sky-pillar"
+      ],
+      "goal": "Acalmar a crise e vencer Juan",
+      "how": "Use Dive para chegar à Seafloor Cavern. Depois, visite Sootopolis e desperte Rayquaza em Sky Pillar.",
+      "items": []
+    },
+    {
+      "id": "ever-grande",
+      "title": "Ever Grande City",
+      "locations": [
+        "ever-grande-city",
+        "hoenn-victory-road"
+      ],
+      "goal": "Vencer a Liga Pokémon",
+      "how": "Use Waterfall para chegar a Ever Grande, atravesse Victory Road e enfrente a Elite Four e Wallace.",
+      "items": []
+    },
+    {
+      "id": "frontier",
+      "title": "Battle Frontier",
+      "locations": [
+        "battle-frontier"
+      ],
+      "goal": "Visitar a Battle Frontier",
+      "how": "Depois da Liga, embarque no S.S. Tidal e visite a Battle Frontier.",
+      "items": []
+    }
+  ],
+  "sevii": [
+    {
+      "id": "sevii-trip",
+      "title": "One, Two & Three Island",
+      "locations": [
+        "one-island",
+        "three-island",
+        "berry-forest"
+      ],
+      "goal": "Ajudar Celio e resgatar Lostelle",
+      "how": "Aceite o convite de Bill depois de Cinnabar. Fale com Celio, visite Two Island e procure Lostelle em Berry Forest.",
+      "items": []
+    },
+    {
+      "id": "sevii-network",
+      "title": "Sevii Islands",
+      "locations": [
+        "mt-ember",
+        "icefall-cave",
+        "dotted-hole",
+        "rocket-warehouse"
+      ],
+      "goal": "Entregar Ruby e Sapphire a Celio",
+      "how": "Após a Liga e a National Pokédex, volte a One Island. Encontre o Ruby em Mt. Ember, procure o Sapphire e recupere-o no Rocket Warehouse.",
+      "items": []
+    }
+  ]
+}

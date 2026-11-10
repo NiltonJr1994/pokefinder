@@ -1,10 +1,16 @@
-.gradle/
-.gradle-cache/
-.idea/
-local.properties
-**/build/
-.kotlin/
-*.iml
+node_modules/
+.expo/
+ios/
+dist/
 *.jks
 *.keystore
+.env*
+
+# Local Android build files and signing material
+.kotlin/
+*.apk
+*.aab
+*.p12
+*.pfx
+*.dpapi
 keystore.properties

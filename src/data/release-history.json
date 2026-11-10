@@ -1,0 +1,30 @@
+[
+  {
+    "tag": "4.5.0",
+    "body": "## Português\n\n- A logo de abertura aparece em tamanho final assim que a arte estiver pronta.\n- Modal de nova versão e histórico de notas com cache offline.\n- Ícones de HMs por tipo e revisão do catálogo de imagens de itens e máquinas.\n- Efetividade defensiva por geração na Pokédex.\n- Mapa e Diário nas 11 edições ativas, com mapas regionais, etapas, encontros e progresso por área.\n\n## English\n\n- The launch logo appears at its final size once the artwork is ready.\n- New-version prompt and release notes with an offline cache.\n- Type-specific HM icons and an audit of item and machine artwork.\n- Generation-specific defensive type matchups in the Pokédex.\n- Maps and Journal for all 11 enabled editions, with regional maps, stages, encounters, and area progress."
+  },
+  {
+    "tag": "4.4.0",
+    "body": "## Português\n\n- GIF do Mewtwo centralizado pelo corpo na lista e na ficha da Pokédex.\n- Golpes offline por edição em Red, Blue, Yellow, Gold, Silver e Crystal.\n- Seções expansíveis para golpes iniciais e por nível, TMs e HMs com numeração, ovo, tutor, Pokémon Stadium e golpes exclusivos de formas anteriores, quando aplicáveis.\n\n## English\n\n- Mewtwo's GIF is centered on its body in the Pokédex list and detail page.\n- Offline, edition-specific learnsets for Red, Blue, Yellow, Gold, Silver, and Crystal.\n- Expandable sections for starting and level-up moves, numbered TMs and HMs, egg moves, tutor moves, Pokémon Stadium, and moves exclusive to earlier evolutionary stages where applicable."
+  },
+  {
+    "tag": "4.3.0",
+    "body": "## Português\n\n- Piloto offline **Mapa e Diário** em Pokémon Yellow, com 16 pontos em Pallet Town, Route 1 e Celadon City.\n- Mapa com zoom, arraste, pontos agrupados e filtros. Diário pesquisável com progresso por partida.\n- Capturas, coletas, NPCs e objetivos com estados próprios, anotações, fixação, pontos pessoais e opção de desfazer.\n- Exportação e restauração de partidas em JSON.\n\n## English\n\n- Offline **Map & Journal** pilot for Pokémon Yellow, with 16 points in Pallet Town, Route 1, and Celadon City.\n- Map with zoom, pan, point grouping, and filters. Searchable journal with per-playthrough progress.\n- Separate statuses for Pokémon, items, NPCs, and goals, plus notes, pinning, personal markers, and undo.\n- JSON export and restore for playthroughs."
+  },
+  {
+    "tag": "4.2.0",
+    "body": "# PokeFinder 4.2.0\n\n## Português (Brasil)\n\n- **Configurações** reúne idioma e tema. A interface oferece Português (Brasil), Português (Portugal), inglês, espanhol, japonês e chinês simplificado. O tema pode seguir o sistema ou usar o modo claro ou escuro.\n- A barra inferior dá acesso a **Códigos**, **Itens**, **Pokédex**, **Dicas** e **Mais**. Em Itens, as abas separam o catálogo de itens, TMs e HMs. Mais abre o menu lateral pela direita e reúne as demais seções.\n- O seletor mostra os logos de 31 edições. As 11 edições com conteúdo podem ser selecionadas. As demais aparecem com **Aguarde!**.\n- A Pokédex usa cartões de tamanho uniforme. Os GIFs ficam centralizados e ocupam quatro portes visuais, definidos principalmente pela altura e pelo peso da espécie.\n- O cabeçalho tem a logo sem faixa branca no tema escuro. A identificação da desenvolvedora fica em **Créditos**.\n- O conteúdo empacotado segue disponível offline. O idioma muda a interface e o guia inicial. Os textos de referência e os nomes de catálogo aparecem no idioma de origem.\n\n## English\n\n- **Settings** brings language and theme together. The interface offers Brazilian Portuguese, European Portuguese, English, Spanish, Japanese, and Simplified Chinese. Choose the system, light, or dark theme.\n- The bottom bar opens **Codes**, **Items**, **Pokédex**, **Tips**, and **More**. Items has separate tabs for the item catalog, TMs, and HMs. More opens the right-side drawer with the remaining sections.\n- The game selector displays logos for 31 editions. Eleven editions have available content. The remaining editions are marked **Coming soon**.\n- Pokédex cards are consistently sized. Animated sprites stay centered and use four visual sizes based primarily on species height and weight.\n- The header logo has a transparent background in dark mode. Developer identification appears in **Credits**.\n- Bundled content remains available offline. The language setting applies to the interface and the quick-start guide. Catalog names and reference text appear in their original languages.\n"
+  },
+  {
+    "tag": "4.2.1",
+    "body": "Símbolos de tipo atualizados, retorno à lista da Pokédex e novos ícones de itens."
+  },
+  {
+    "tag": "4.1.0",
+    "body": "Identidade PokeFinder, GIFs e ajustes de navegação na Pokédex."
+  },
+  {
+    "tag": "4.0.0",
+    "body": "Primeira versão em React Native com o catálogo offline."
+  }
+]

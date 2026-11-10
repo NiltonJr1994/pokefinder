@@ -15,16 +15,38 @@ O **PokeFinder** é um projeto independente de fã, desenvolvido pela **N. J. So
 
 O catálogo, os guias e as imagens incluídas no app funcionam offline. A verificação opcional de atualizações consulta as releases públicas do GitHub e abre a página da versão para download manual. [Releases do PokeFinder](https://github.com/NiltonJr1994/pokefinder/releases)
 
-### Compilar e testar
+### Histórico de versões
 
-O app usa **Kotlin, Jetpack Compose e Material 3** e funciona no **Android 10 ou posterior**. Abra a raiz do repositório no Android Studio com o **JDK 17** e o **Android SDK 36**, aguarde a sincronização e use **Run**. Para gerar o APK de teste pelo terminal, execute um dos comandos abaixo.
+- [v4.5.0](RELEASE-NOTES.md#v450) — Mapas, efetividade e atualizações. Primeira build deste canal de produção.
+- [v4.4.0](RELEASE-NOTES.md#v440) — Golpes offline na Pokédex e ajuste do Mewtwo.
+- [v4.3.0](RELEASE-NOTES.md#v430) — Piloto de Mapa e Diário em Yellow.
+- [v4.2.1](RELEASE-NOTES.md#v421) — Redesenho dos símbolos de tipo, retorno à lista da Pokédex após abrir evoluções, logos de edição nos títulos e novos ícones de itens. Os créditos das animações e referências foram reunidos em Créditos.
+- [v4.2.0](RELEASE-NOTES.md#v420) — Configurações, seis idiomas e navegação inferior.
+- [v4.1.0](RELEASE-NOTES.md#v410) — Nova logo no cabeçalho e na abertura de dois segundos. Menu reorganizado, fichas da Pokédex com cores por tipo e GIFs com dimensões originais.
+- [v4.0.0](RELEASE-NOTES.md#v400) — Primeira versão React Native com Expo. Catálogo offline portado, busca e favoritos, introdução, guia de cheats e consulta de atualizações.
+- [v3.4.0](RELEASE-NOTES.md#v340) — Adoção do nome PokeFinder. Inclusão da introdução, das instruções de cheats, de mais dicas e da consulta às releases públicas.
+- [v3.3.0](RELEASE-NOTES.md#v330) — Seletor único de jogo no menu, edição lembrada e seções filtradas pela cobertura. GIFs na Pokédex e ajustes visuais.
+- [v3.2.0](RELEASE-NOTES.md#v320) — Ajustes no visual da Pokédex, com filtros por tipo, fichas de Yellow e Gold e uma seção dedicada a Créditos.
+- [v3.1.0](RELEASE-NOTES.md#v310) — Adoção do visual do APK de referência, tema claro e escuro persistente, menu por jogo e tabelas de itens, TMs e HMs com compatibilidade.
+- [v3.0.0](RELEASE-NOTES.md#v300) — Migração para Kotlin, Jetpack Compose e Material 3. Menu lateral, busca offline, layout adaptável e catálogo ampliado.
+- [v2.0.1](RELEASE-NOTES.md#v201) — Correção da navegação Voltar no Android, com remoção do callback legado e suporte à navegação preditiva.
+- [v2.0.0](RELEASE-NOTES.md#v200) — Projeto Android com conteúdo HTML local em WebView, Android 10 como versão mínima e Android 16 como alvo.
+- [v1.2.0](RELEASE-NOTES.md#v120) — Build Android legada identificada no APK original da N. J. Softwares. O APK confirma o número da versão e o pacote de distribuição. As alterações específicas dessa build não estão documentadas nos materiais disponíveis.
+- [v1.0](RELEASE-NOTES.md#v10) — Versão inicial para Windows, executada no navegador e disponível offline. A busca tolerava pequenos erros, com filtros por jogo e cópia de códigos.
 
-| Sistema | Comando |
-| --- | --- |
-| Windows (PowerShell) | `.gradlew.bat :app:assembleDebug` |
-| macOS ou Linux | `./gradlew :app:assembleDebug` |
+### Compilar para produção
 
-O APK gerado fica em `app/build/outputs/apk/debug/app-debug.apk`. Consulte o [histórico de alterações](CHANGELOG.md) para detalhes da versão.
+Use Node.js 22, JDK 17 e o Android SDK 36. Configure `ANDROID_HOME` ou selecione o SDK no Android Studio. A pasta `android/` já contém a configuração nativa usada na compilação.
+
+```powershell
+npm ci
+npm run check
+$env:POKEFINDER_PRODUCTION = "1"
+Set-Location android
+.\gradlew.bat :app:assembleRelease
+```
+
+O APK sem assinatura sai em `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Para distribuição, alinhe e assine com a chave de produção. O pacote usa `com.njsoftwares.pokecodefinder` e o código de versão `45000`. [Guia de migração e assinatura](MIGRACAO.md#build-de-produção-450)
 
 ### Projeto de fã e direitos
 
@@ -43,16 +65,38 @@ O PokeFinder é um projeto educacional e independente, sem afiliação ou endoss
 
 The catalog, guides, and bundled images work offline. The optional update check looks up public GitHub releases and opens the release page for manual download. [PokeFinder releases](https://github.com/NiltonJr1994/pokefinder/releases)
 
-### Build and test
+### Release history
 
-The app uses **Kotlin, Jetpack Compose, and Material 3** and runs on **Android 10 or later**. Open the repository root in Android Studio with **JDK 17** and **Android SDK 36**, wait for Gradle to sync, and select **Run**. To build a debug APK from the terminal, run the command for your platform.
+- [v4.5.0](RELEASE-NOTES.md#v450) — Maps, type matchups, and updates. First build of this production channel.
+- [v4.4.0](RELEASE-NOTES.md#v440) — Offline Pokédex learnsets and Mewtwo alignment.
+- [v4.3.0](RELEASE-NOTES.md#v430) — Map and Journal pilot in Yellow.
+- [v4.2.1](RELEASE-NOTES.md#v421) — Redesigned type symbols, direct return to the Pokédex list after opening evolutions, edition logos in headings, and new item icons. Animation and reference attributions were consolidated in Credits.
+- [v4.2.0](RELEASE-NOTES.md#v420) — Settings, six languages, and bottom navigation.
+- [v4.1.0](RELEASE-NOTES.md#v410) — New logo in the header and two-second launch screen. Reorganized menu, type-colored Pokédex cards and details, and GIFs rendered at their original dimensions.
+- [v4.0.0](RELEASE-NOTES.md#v400) — First React Native release with Expo. Ported offline catalog, search and favorites, onboarding, cheat guide, and update checks.
+- [v3.4.0](RELEASE-NOTES.md#v340) — Adopted the PokeFinder name. Added onboarding, cheat instructions, more tips, and public release checks.
+- [v3.3.0](RELEASE-NOTES.md#v330) — Single game picker, persisted edition selection, and sections filtered by game coverage. Added Pokédex GIFs and visual refinements.
+- [v3.2.0](RELEASE-NOTES.md#v320) — Refined the Pokédex layout with type filters, Yellow and Gold details, and a dedicated Credits section.
+- [v3.1.0](RELEASE-NOTES.md#v310) — Adopted the reference APK styling, persistent light and dark themes, game-specific navigation, and item, TM, and HM compatibility tables.
+- [v3.0.0](RELEASE-NOTES.md#v300) — Migrated to Kotlin, Jetpack Compose, and Material 3. Added a navigation drawer, offline search, adaptive layout, and expanded catalog.
+- [v2.0.1](RELEASE-NOTES.md#v201) — Fixed Android Back navigation by removing the legacy callback and enabling predictive back.
+- [v2.0.0](RELEASE-NOTES.md#v200) — Android project using local HTML in a WebView, with Android 10 as the minimum and Android 16 as the target.
+- [v1.2.0](RELEASE-NOTES.md#v120) — Legacy Android build identified from the original N. J. Softwares APK. The APK confirms the version and distribution package. Build-specific changes are undocumented in the available material.
+- [v1.0](RELEASE-NOTES.md#v10) — Initial Windows version running offline in the browser. It provided typo-tolerant search, game filters, and cheat code copying.
 
-| Platform | Command |
-| --- | --- |
-| Windows (PowerShell) | `.gradlew.bat :app:assembleDebug` |
-| macOS or Linux | `./gradlew :app:assembleDebug` |
+### Build for production
 
-The resulting APK is at `app/build/outputs/apk/debug/app-debug.apk`. See the [changelog](CHANGELOG.md) for release details.
+Use Node.js 22, JDK 17, and Android SDK 36. Set `ANDROID_HOME` or select the SDK in Android Studio. The `android/` folder contains the native configuration used for the build.
+
+```powershell
+npm ci
+npm run check
+$env:POKEFINDER_PRODUCTION = "1"
+Set-Location android
+.\gradlew.bat :app:assembleRelease
+```
+
+The unsigned APK is written to `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Align and sign it with the production key before distributing it. The package is `com.njsoftwares.pokecodefinder` and the version code is `45000`. [Migration and signing guide](MIGRACAO.md#build-de-produção-450)
 
 ### Fan project and rights
 
@@ -69,10 +113,16 @@ PokeFinder is an independent educational project with no affiliation with or end
 ### Catálogo, sprites e guias / Catalog, sprites, and guides
 
 - **PokéAPI**. Dados de espécies, encontros, itens e máquinas, além de sprites de Pokémon e itens e animações de Crystal. / Species, encounter, item, and machine data, plus Pokémon and item sprites and Crystal animations. [Dados CSV / CSV data](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) · [Sprites](https://github.com/PokeAPI/sprites)
+- **PokéAPI e pret**. Dados de golpes por edição e conferência de Mewtwo em Yellow. / Edition learnsets and a cross-check of Mewtwo in Yellow. [Dados CSV / CSV data](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) · [pret/pokeyellow](https://github.com/pret/pokeyellow/tree/master/data/pokemon)
 - **Pokémon Showdown**. GIFs ilustrativos distribuídos no repositório de sprites da PokéAPI. / Illustrative GIFs distributed through the PokéAPI sprites repository. [GIFs do Showdown / Showdown GIFs](https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/other/showdown)
 - **Pokémon Database**. Catálogo e imagens de itens e tabelas de TMs, HMs e compatibilidade em Red, Blue e Yellow. / Item catalog and images, and TM, HM, and compatibility tables for Red, Blue, and Yellow. [Itens / Items](https://pokemondb.net/item/all) · [TMs](https://pokemondb.net/red-blue/tms) · [HMs](https://pokemondb.net/red-blue/hms)
 - **IGN**. Guia de itens de Red, Blue e Yellow. / Item guide for Red, Blue, and Yellow. [IGN Items Guide](https://www.ign.com/wikis/pokemon-red-blue-yellow-version/Items)
 - **Bulbapedia**. Detonados, índices de itens e referências para dicas. / Walkthroughs, item indexes, and references for gameplay tips. [Detonados / Walkthroughs](https://bulbapedia.bulbagarden.net/wiki/Category:Walkthroughs) · [Yellow](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Yellow) · [Red & Blue](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Red_and_Blue) · [Gold & Silver](https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Gold_and_Silver) · [Itens da geração II / Generation II items](https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_in_Generation_II) · [Itens da geração III / Generation III items](https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_in_Generation_III) · [Odd Egg](https://bulbapedia.bulbagarden.net/wiki/Odd_Egg) · [Clear Bell](https://bulbapedia.bulbagarden.net/wiki/Clear_Bell) · [VS Seeker](https://bulbapedia.bulbagarden.net/wiki/VS_Seeker) · [Voltorb Flip](https://bulbapedia.bulbagarden.net/wiki/Voltorb_Flip) · [Haircut brothers](https://bulbapedia.bulbagarden.net/wiki/Haircut_brothers)
+- **Bulbapedia**, *Size and weight variation*, e arquivo fornecido *Proporção_Tamanho_Peso.zip*. Referências sobre altura, peso e diferenças entre edições. / References for height, weight, and differences across editions. [Size and weight variation](https://bulbapedia.bulbagarden.net/wiki/Size_and_weight_variation)
+- **Logos das edições / Game edition logos**. Imagens do arquivo fornecido *logos_pk_png_transp.zip*, usadas para identificar jogos no seletor. / Images from the supplied archive, used to identify games in the selector.
+- **Pokémon 100% Checklist** e **RankedBoost**. A folha de sprites indicada no ZIP de Yellow e as imagens do ZIP de Gold & Silver complementam a arte dos itens. / The sprite atlas referenced by the Yellow archive and the images in the Gold & Silver archive supplement the item artwork. [Pokémon 100% Checklist](https://pokemoncompletion.com/completion/Yellow) · [RankedBoost](https://rankedboost.com/pokemon/location/gold-silver/)
+- **Mapa do piloto / Pilot map**. Recortes da imagem completa de Yellow do ZIP fornecido. / Crops from the supplied full Yellow map. [Pokémon 100% Checklist — Yellow](https://pokemoncompletion.com/completion/Yellow)
+- **Coin e Large Coin**. Imagens fornecidas ao projeto. / Images supplied to the project.
 - **PokéPC**. Fichas e disponibilidade de Pokémon em Yellow, consultadas em uma cópia fornecida da página. / Pokémon profiles and availability in Yellow, consulted in a supplied copy of the page. [PokéPC](https://pokepc.net/)
 - **Nintendo**, *Pokémon Trainer’s Guide — Special Pikachu Edition*. Guia consultado no PDF fornecido. / Guide consulted in the supplied PDF.
 - **Pokémon Checklist**, *Pokemon Yellow Kanto Pokedex*. Material consultado no PDF fornecido. / Reference consulted in the supplied PDF.
@@ -89,7 +139,7 @@ PokeFinder is an independent educational project with no affiliation with or end
 
 ### Referências técnicas / Technical references
 
-- **Android Developers**. Interface e compilação do app. / App UI and build. [Jetpack Compose](https://developer.android.com/develop/ui/compose) · [Assinatura de apps / App signing](https://developer.android.com/studio/publish/app-signing)
+- **React Native, Expo e Android Developers**. Interface, compilação e assinatura. / UI, build, and signing. [React Native](https://reactnative.dev/) · [Expo SDK 56](https://docs.expo.dev/versions/v56.0.0/) · [Assinatura de apps / App signing](https://developer.android.com/studio/publish/app-signing)
 - **GitHub Docs**. Consulta da última release pública. / Looking up the latest public release. [API de releases / Releases API](https://docs.github.com/en/rest/releases/releases#get-the-latest-release)
 
 ### Uso de IA / Use of AI
