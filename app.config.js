@@ -15,7 +15,7 @@ module.exports = {
   ios: { bundleIdentifier: 'com.njsoftwares.pokecodefinder', supportsTablet: true },
   android: {
     package: production ? 'com.njsoftwares.pokecodefinder' : 'com.njsoftwares.pokecodefinder.rnpreview',
-    versionCode: 45000,
+    versionCode: require('./src/data/build.json').androidVersionCode,
     adaptiveIcon: { foregroundImage: './assets/app-icon.png', backgroundColor: '#244B91' },
     blockedPermissions: [
       'android.permission.RECORD_AUDIO', 'android.permission.READ_EXTERNAL_STORAGE',

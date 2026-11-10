@@ -92,7 +92,7 @@ android {
         applicationId 'com.njsoftwares.pokecodefinder'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 45000
+        versionCode 45001
         versionName "4.5.0"
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""

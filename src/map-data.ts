@@ -8,7 +8,7 @@ export const areas = [
   { id: 'route1', title: 'Route 1', x: 1528, y: 3664, width: 304, height: 600 },
   { id: 'celadon', title: 'Celadon City', x: 3088, y: 2256, width: 880, height: 568 },
 ] as const;
-export type Area = { id: string; title: string; x: number; y: number; width: number; height: number; illustrated?: boolean; regional?: string };
+export type Area = { id: string; title: string; x: number; y: number; width: number; height: number; illustrated?: boolean; regional?: string; backdrop?: { x: number; y: number; width: number; height: number } };
 export type AreaId = string;
 export const categories = {
   pokemon: 'Pokémon', item: 'Itens', npc: 'NPCs', objective: 'Objetivos',
@@ -89,15 +89,29 @@ function buildAtlas(version: string) {
     const final = stages[stages.length - 1];
     stages[stages.length - 1] = { ...final, how: 'Depois da Liga, explore a caverna a noroeste de Cerulean.' };
   }
+  const regionalKey = region === 'kanto' ? 'yellow' : region === 'johto' ? 'crystal' : 'emerald';
+  const overview = regionalData[regionalKey];
   const areaList: Area[] = stages.map(stage => {
     const original = version === 'yellow' ? areas.find(area => area.id === stage.id) : undefined;
-    return original ? { ...original, illustrated: true } : { id: stage.id, title: stage.title, x: 0, y: 0, width: 480, height: 430 };
+    if (original) return { ...original, illustrated: true };
+    const location = overview.labels[landmarks[stage.id] ?? stage.title];
+    const area = { id: stage.id, title: stage.title, x: 0, y: 0, width: 480, height: 430 };
+    if (stage.id === 'sevii-trip' || stage.id === 'sevii-network') {
+      const key = stage.id === 'sevii-trip' ? 'seviiStart' : 'seviiLate';
+      const { width, height } = regionalData[key];
+      return { ...area, illustrated: true, regional: key, backdrop: { x: 0, y: 0, width, height } };
+    }
+    if (!location) return area;
+    const width = 112;
+    const height = 100;
+    return { ...area, illustrated: true, regional: regionalKey, backdrop: {
+      x: Math.max(0, Math.min(overview.width - width, location[0] - width / 2)),
+      y: Math.max(0, Math.min(overview.height - height, location[1] - height / 2)), width, height,
+    } };
   });
   const byArea = (id: AreaId) => areaList.find(area => area.id === id) ?? areaList[0];
   const atlasPoints: Point[] = [];
   const goals: Point[] = [];
-  const regionalKey = region === 'kanto' ? 'yellow' : region === 'johto' ? 'crystal' : 'emerald';
-  const overview = regionalData[regionalKey];
   const regional: Area = { id: 'region', title: regionalKey, x: 0, y: 0, width: overview.width,
     height: overview.height, illustrated: true, regional: regionalKey };
   const regionalPoints: Point[] = [];
@@ -106,10 +120,10 @@ function buildAtlas(version: string) {
   for (const stage of stages) {
     const area = byArea(stage.id);
     const xy = (x: number, y: number) => ({ x: area.x + x * area.width, y: area.y + y * area.height });
-    const pilot = area.illustrated ? points.filter(point => point.area === stage.id) : [];
+    const pilot = area.illustrated && !area.regional ? points.filter(point => point.area === stage.id) : [];
     atlasPoints.push(...pilot);
     const goal: Point = { id: stage.id + '-story', area: stage.id, category: 'objective', title: stage.goal,
-      place: stage.title, description: stage.how, ...xy(.5, .22) };
+      place: stage.title, description: stage.how, ...xy(.5, area.backdrop ? .5 : .22) };
     const routeGoal = pilot.find(point => point.id === 'route1-viridian');
     if (!routeGoal) atlasPoints.push(goal);
     goals.push(routeGoal ?? goal);

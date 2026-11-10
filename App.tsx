@@ -14,7 +14,7 @@ import { Updates, UpdatePrompt, useUpdates, type UpdatePrefs } from './src/updat
 import { Entries, Items, MachineDetail, Machines } from './src/reference';
 import { brand, Button, CopyText, dark, layout, light, logo, Motion, Theme, useTheme } from './src/ui';
 import { Drawer, Logo, MainTabs, sectionIcons } from './src/navigation';
-import { Locale, languages, type Language, useLocale } from './src/locale';
+import { Locale, deviceLanguage, languages, type Language, useLocale } from './src/locale';
 import { Settings } from './src/settings';
 import { MapJournal } from './src/map-journal';
 
@@ -24,7 +24,7 @@ type Preferences = UpdatePrefs & {
   edition: string; dark: boolean | null; language: Language; onboarded: boolean; codeFavorites: string[]; dexFavorites: number[];
 };
 const defaults: Preferences = {
-  edition: 'yellow', dark: null, language: 'pt-BR', onboarded: false, codeFavorites: [], dexFavorites: [],
+  edition: 'yellow', dark: null, language: deviceLanguage(), onboarded: false, codeFavorites: [], dexFavorites: [],
   automatic: true, nextCheck: 0, remoteNotes: [], dismissedUpdate: '', checkedVersion: '', availableTag: '',
 };
 const storageKey = 'pokefinder/preferences-v1';
@@ -85,7 +85,7 @@ function Finder({ prefs, save, release }: {
   const { tr } = useLocale();
   const { width } = useWindowDimensions();
   const edition = editions.find(game => game.version === prefs.edition) ?? editions[0];
-  const [route, setRoute] = useState<Section>(() => available('codes', edition) ? 'codes' : 'items');
+  const [route, setRoute] = useState<Section>('dex');
   const [previous, setPrevious] = useState<Section | null>(null);
   const [drawer, setDrawer] = useState(false);
   const [editionList, setEditionList] = useState(false);
@@ -97,6 +97,7 @@ function Finder({ prefs, save, release }: {
 
   function closeIntro() {
     setIntro(-1);
+    selectSection('dex');
     save({ onboarded: true });
   }
 
@@ -201,7 +202,7 @@ function Finder({ prefs, save, release }: {
       </View>
       {pokemon && <PokemonDetail key={pokemon.id} pokemon={pokemon} edition={edition}
         favorites={prefs.dexFavorites} favorite={dexFavorite} open={openPokemon} back={goBack} />}
-      {machine && <MachineDetail machine={machine} edition={edition}
+      {machine && !pokemon && <MachineDetail machine={machine} edition={edition} open={openPokemon}
         columns={Math.max(1, Math.min(7, Math.floor((width - 24) / 130)))} />}
     </View>
     {!inDetail && <MainTabs route={route} drawer={drawer} select={selectSection} open={() => setDrawer(true)} />}

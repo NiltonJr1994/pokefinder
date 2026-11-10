@@ -72,9 +72,9 @@ const symbols: Record<string, IconName> = {
   '♥': 'heart', '♡': 'heart-outline',
 };
 
-export function Button({ label, onPress, selected = false, disabled = false, hint, compact = false,
+export function Button({ label, onPress, selected = false, disabled = false, hint, compact = false, dense = false,
   icon, trailing, primary = false }: {
-  label: string; onPress: () => void; selected?: boolean; disabled?: boolean; hint?: string; compact?: boolean;
+  label: string; onPress: () => void; selected?: boolean; disabled?: boolean; hint?: string; compact?: boolean; dense?: boolean;
   icon?: IconName; trailing?: IconName; primary?: boolean;
 }) {
   const t = useTheme();
@@ -85,13 +85,13 @@ export function Button({ label, onPress, selected = false, disabled = false, hin
     accessibilityState={{ selected, disabled }} disabled={disabled} onPress={onPress}
     style={({ pressed }) => ({
       justifyContent: 'center', minHeight: 44, minWidth: 44, alignItems: 'center', flexShrink: 1, flexDirection: 'row', gap: 6,
-      paddingHorizontal: compact ? 6 : 12, paddingVertical: 6, borderRadius: compact ? 22 : 14,
+      paddingHorizontal: compact ? 6 : dense ? 8 : 12, paddingVertical: dense ? 2 : 6, borderRadius: compact ? 22 : 14,
       borderWidth: compact || primary ? 0 : 1, borderColor: selected ? t.red : t.line,
       backgroundColor: primary ? (pressed ? '#A9212D' : '#B62935') : selected || pressed ? t.selection : t.panel,
       opacity: disabled ? .5 : 1,
     })}>
     {leading && <Icon name={leading} size={compact ? 23 : 17} color={color} />}
-    {(!compact || !leading) && <CopyText style={{ color, fontSize: 14, fontWeight: '700', flexShrink: 1 }}>{label}</CopyText>}
+    {(!compact || !leading || !symbols[label] && !!label) && <CopyText style={{ color, fontSize: dense ? 12 : 14, fontWeight: '700', flexShrink: 1 }}>{label}</CopyText>}
     {trailing && <Icon name={trailing} size={15} color={color} />}
   </Pressable>;
 }
@@ -256,16 +256,16 @@ const bounds: Record<string, number[]> = gifBounds;
 export const spriteDimensions = (game: string | undefined, id: number, fallback: number) =>
   dimensions[gifKey(game, id)] ?? [fallback, fallback];
 
-export function Art({ name, id, size, game, animated = false, visualSize }: {
-  name?: string; id?: number; size: number; game?: string; animated?: boolean; visualSize?: number;
+export function Art({ name, id, size, game, animated = false, visualSize, alternate, alternateSize }: {
+  name?: string; id?: number; size: number; game?: string; animated?: boolean; visualSize?: number; alternate?: number; alternateSize?: number[];
 }) {
   const [failed, setFailed] = useState(false);
   const motion = useContext(Motion);
   const animation = motion && animated && id !== undefined
-    ? animations[gifKey(game, id)] : undefined;
+    ? alternate ?? animations[gifKey(game, id)] : undefined;
   const staticImage = sprites[name ?? (id === undefined ? '' : spriteKey(id))];
   const source = !failed && animation ? animation : staticImage;
-  const [width, height] = animated && id !== undefined ? spriteDimensions(game, id, size) : [size, size];
+  const [width, height] = alternate && animation && alternateSize ? alternateSize : animated && id !== undefined ? spriteDimensions(game, id, size) : [size, size];
   // Center Mewtwo's torso. Its animated tail occupies the right side of the canvas.
   const offsetX = id === 150 && animation && !failed ? (game === 'crystal' ? 2 : 21) : 0;
   if (visualSize !== undefined && source && id !== undefined) {

@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, TextInput, View } from 'react-native';
+import { Alert, FlatList, Modal, Pressable, TextInput, View } from 'react-native';
 import {
   atlasFor, blankMark, categories, categoryKeys, isComplete, makeId, progressKey, statuses,
   type AreaId, type Category, type Mark, type Point, type Profile,
 } from './map-data';
+import { gymFor, GymDetails } from './gym';
 import { MapCanvas, pointIcon } from './map-canvas';
 import { exportJournal, selectJournalBackup, useJournal } from './map-store';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { searchKey, type Edition } from './catalog';
 import { useLocale } from './locale';
 import { Art, Badge, Button, Card, Choice, CopyText, EmptyState, GameLogo, Icon, layout, Search, Sheet, Types, useTheme } from './ui';
@@ -21,6 +23,7 @@ export function MapJournal({ edition }: { edition: Edition }) {
   const { journal, ready, save, saveFailed } = useJournal(edition.version);
   const profile = journal.profiles.find(entry => entry.id === journal.active);
   const [tab, setTab] = useState<'map' | 'diary' | 'region'>('map');
+  const [full, setFull] = useState(false);
   const [panel, setPanel] = useState<Panel>(null);
   const [selected, setSelected] = useState<Point>();
   const [cluster, setCluster] = useState<Point[]>([]);
@@ -154,7 +157,21 @@ export function MapJournal({ edition }: { edition: Edition }) {
     ]);
   }
 
+  const openRegion = (group: Point[]) => {
+    setFull(false);
+    if (group.length > 1) { setCluster(group); return; }
+    updateProfile(previous => ({ ...previous, area: group[0].area }));
+    setTab('map');
+  };
+  const regionMarkers = regionalPoints.map(point => ({ point,
+    done: goals.some(goal => goal.area === point.area && isComplete(goal, markOf(goal))) }));
   return <View style={[layout.wide, { paddingHorizontal: 11, paddingVertical: 7, gap: 6 }]}>
+    {full && <Modal visible onRequestClose={() => setFull(false)} animationType="fade">
+      <SafeAreaView style={{ flex: 1, gap: 5, padding: 8, backgroundColor: t.page }}>
+        <Button dense label="Sair da tela cheia" icon="contract-outline" onPress={() => setFull(false)} />
+        <MapCanvas area={regional} placing={false} markers={regionMarkers} onOpen={openRegion} onPlace={() => {}} />
+      </SafeAreaView>
+    </Modal>}
     <View style={[layout.row, { justifyContent: 'space-between' }]}>
       <View style={layout.wrap}><CopyText kind="title">Mapa e Diário</CopyText><GameLogo version={edition.version} title={edition.title} /></View>
       <Button compact label="" icon="archive-outline" hint="Backup das partidas" onPress={() => setPanel('backup')} />
@@ -166,48 +183,45 @@ export function MapJournal({ edition }: { edition: Edition }) {
       <Button label="Nova partida" icon="add" primary onPress={() => setPanel('newProfile')} />
     </Card> : <>
       <View style={[layout.row, { flexWrap: 'wrap' }]}>
-        <Button label={profile.name} hint={tr('Partida: {name}', { name: profile.name })} icon="game-controller-outline"
+        <Button dense label={profile.name} hint={tr('Partida: {name}', { name: profile.name })} icon="game-controller-outline"
           trailing="chevron-down" onPress={() => setPanel('profiles')} />
-        <Badge>{tr('{done}/{total} pontos', { done: complete, total: total.size })}</Badge>
+        <View><Badge>{tr('{done}/{total} pontos', { done: complete, total: total.size })}</Badge></View>
         <CopyText kind="muted">{tr('{count} capturados', {
           count: captured.size,
         })}</CopyText>
       </View>
       <View style={layout.wrap}>
-        <Button label="Mapa" selected={tab === 'map'} icon="map-outline" onPress={() => setTab('map')} />
-        <Button label="Região" selected={tab === 'region'} icon="earth-outline" onPress={() => { setTab('region'); setPlacing(false); }} />
-        <Button label="Diário" selected={tab === 'diary'} icon="list-outline" onPress={() => { setTab('diary'); setPlacing(false); }} />
-        <Button label="Filtros" selected={category !== 'all' || state !== 'Todos' || hiddenOnly || type !== 'Todos os tipos'} icon="options-outline" onPress={() => setPanel('filters')} />
+        <Button dense label="Mapa" selected={tab === 'map'} icon="map-outline" onPress={() => setTab('map')} />
+        <Button dense label="Região" selected={tab === 'region'} icon="earth-outline" onPress={() => { setTab('region'); setPlacing(false); }} />
+        <Button dense label="Diário" selected={tab === 'diary'} icon="list-outline" onPress={() => { setTab('diary'); setPlacing(false); }} />
+        <Button dense label="Filtros" selected={category !== 'all' || state !== 'Todos' || hiddenOnly || type !== 'Todos os tipos'} icon="options-outline" onPress={() => setPanel('filters')} />
         {undo && <Button label="Desfazer" icon="arrow-undo-outline" onPress={undoLast} />}
       </View>
-      {nextGoal && <Button label={tr('Próximo objetivo · {name}', { name: nextGoal.title })} compact
+      {nextGoal && <Button label={tr('Próximo objetivo · {name}', { name: nextGoal.title })} dense
         icon="flag-outline" trailing="chevron-forward" onPress={() => open(nextGoal)} />}
       {tab === 'map' ? <>
         <View style={layout.wrap}>
-          <Button label={area.title} hint={tr('Área: {name}', { name: area.title })} icon="location-outline" trailing="chevron-down"
+          <Button dense label={area.title} hint={tr('Área: {name}', { name: area.title })} icon="location-outline" trailing="chevron-down"
             onPress={() => setPanel('areas')} />
-          <Button label={placing ? 'Cancelar' : 'Novo ponto'} icon={placing ? 'close' : 'add'}
+          <Button dense label={placing ? 'Cancelar' : 'Novo ponto'} icon={placing ? 'close' : 'add'}
             disabled={!placing && profile.custom.length >= 100} onPress={() => setPlacing(!placing)} />
         </View>
         {placing && <CopyText kind="muted">Toque em um local no mapa para criar um ponto pessoal.</CopyText>}
+        {area.backdrop && <CopyText kind="muted">Recorte regional · marcadores indicativos</CopyText>}
         <MapCanvas key={profile.id + '/' + area.id} area={area} placing={placing}
           focus={allPoints.find(point => point.id === profile.lastPoint)}
           markers={mapPoints.map(point => ({ point, done: isComplete(point, markOf(point)) }))}
           onOpen={group => group.length === 1 ? open(group[0]) : setCluster(group)}
           onPlace={(x, y) => { setNewPosition({ area: area.id, x, y }); setPlacing(false); setPanel('newPoint'); }} />
         {!placing && <Button label={areaStatus.done === areaStatus.total ? 'Área concluída' : tr('{done}/{total} pontos nesta área', areaStatus)}
-          compact icon="checkmark-circle-outline" onPress={() => setPanel('areaStatus')} />}
+          dense icon="checkmark-circle-outline" onPress={() => setPanel('areaStatus')} />}
       </> : tab === 'region' ? <>
         <CopyText kind="muted">{tr('Mapa regional de referência · {name}', {
           name: regional.title[0].toUpperCase() + regional.title.slice(1),
         })}</CopyText>
-        <MapCanvas key={regional.id} area={regional} placing={false}
-          markers={regionalPoints.map(point => ({ point, done: goals.some(goal => goal.area === point.area && isComplete(goal, markOf(goal))) }))}
-          onOpen={group => {
-            if (group.length > 1) { setCluster(group); return; }
-            updateProfile(previous => ({ ...previous, area: group[0].area }));
-            setTab('map');
-          }} onPlace={() => {}} />
+        <Button dense label="Tela cheia" icon="expand-outline" onPress={() => setFull(true)} />
+        <MapCanvas key={regional.id} area={regional} placing={false} markers={regionMarkers}
+          onOpen={openRegion} onPlace={() => {}} />
       </> : <>
         <Search label="Buscar no diário" value={query} onChange={setQuery} />
         <View style={layout.wrap}>
@@ -289,7 +303,7 @@ export function MapJournal({ edition }: { edition: Edition }) {
         } else open(point);
       }} />)}
     </Sheet>}
-    {selected && <PointPanel key={selected.id} point={selected} areaTitle={byArea(selected.area).title} mark={markOf(selected)}
+    {selected && <PointPanel key={selected.id} point={selected} edition={edition} areaTitle={byArea(selected.area).title} mark={markOf(selected)}
       canUndo={undo?.key === progressKey(selected) && undo.profileId === profile?.id}
       close={() => setSelected(undefined)} undo={undoLast}
       remove={selected.id.startsWith('custom-') ? () => removePoint(selected) : undefined}
@@ -318,18 +332,20 @@ function PointRow({ point, mark, open }: { point: Point; mark: Mark; open: () =>
   </Pressable></Card>;
 }
 
-function PointPanel({ point, areaTitle, mark, canUndo, close, undo, status, note, pin, locate, remove }: {
-  point: Point; areaTitle: string; mark: Mark; canUndo: boolean; close: () => void; undo: () => void; status: (value: number) => void;
+function PointPanel({ point, edition, areaTitle, mark, canUndo, close, undo, status, note, pin, locate, remove }: {
+  point: Point; edition: Edition; areaTitle: string; mark: Mark; canUndo: boolean; close: () => void; undo: () => void; status: (value: number) => void;
   note: (value: string) => void; pin: () => void; locate: () => void; remove?: () => void;
 }) {
   const { tr } = useLocale();
   const [draft, setDraft] = useState(mark.note);
+  const gym = point.category === 'objective' && point.id.endsWith('-story') ? gymFor(edition, point.area) : undefined;
   return <Sheet title={point.title} bottom keyboard close={close}>
     <View style={layout.row}>
       {(point.art || point.species) ? <Art name={point.art} id={point.species} size={48} /> : <Icon name={pointIcon(point)} />}
       <View style={layout.grow}><CopyText kind="title">{point.place}</CopyText><CopyText kind="muted">{areaTitle}</CopyText></View>
     </View>
     {!!point.description && <CopyText>{point.description}</CopyText>}
+    {gym && <GymDetails gym={gym} edition={edition} />}
     {point.hidden && <Badge>Item escondido</Badge>}
     {!!point.types?.length && <Types values={point.types} />}
     {!!point.encounters?.length && <View style={{ gap: 4 }}>

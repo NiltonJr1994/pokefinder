@@ -36,11 +36,12 @@ for key, (edition, factor, left, top) in calibration.items():
                     meta['labels'][html.unescape(name).strip()] = [x, y]
             assert len(meta['labels']) > 30, (key, len(meta['labels']))
             metadata[key] = meta
-            for level, sample in [('low', 1), ('high', 3)]:
+            for level, sample in [('low', 1), ('high', 6)]:
                 maps.append(f'  {key}_{level}: [')
-                for y in range(0, height, 256):
-                    for x in range(0, width, 256):
-                        w, h = min(width - x, 256), min(height - y, 256)
+                span = 128 if level == "high" else 256
+                for y in range(0, height, span):
+                    for x in range(0, width, span):
+                        w, h = min(width - x, span), min(height - y, span)
                         tile = source.crop((x * factor, y * factor, (x + w) * factor, (y + h) * factor))
                         tile = tile.convert('RGBA').resize((w * sample, h * sample), Image.Resampling.NEAREST)
                         filename = f'{key}_{level}_{x}_{y}.webp'

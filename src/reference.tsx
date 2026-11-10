@@ -63,9 +63,9 @@ export function Entries({ section, edition, favorites, favorite, openCheats }: {
         tips: 'Atalhos e detalhes que ajudam durante a aventura.',
         guides: 'Rota principal e pós-jogo em etapas.',
       }[section]} />
-      {codes && <Card style={{ backgroundColor: t.warn }}>
-        <CopyText>Confira a região, a revisão e o formato do código. Faça uma cópia do save antes de testar.</CopyText>
-        <Button label="Como inserir cheats" icon="game-controller-outline" trailing="chevron-forward" onPress={openCheats} />
+      {codes && <Card style={{ padding: 8, gap: 4 }}>
+        <CopyText kind="muted">Confira a região, a revisão e o formato do código. Faça uma cópia do save antes de testar.</CopyText>
+        <Button dense label="Como inserir cheats" icon="game-controller-outline" trailing="chevron-forward" onPress={openCheats} />
       </Card>}
       <Search label={'Buscar em ' + sections[section].toLowerCase()} value={query} onChange={setQuery} />
       {codes && <>
@@ -75,8 +75,8 @@ export function Entries({ section, edition, favorites, favorite, openCheats }: {
         </View>
         <View style={layout.wrap}>
           {['Rare Candy', 'Master Ball', 'Dinheiro', 'Shiny'].map(term =>
-            <Button key={term} label={term} onPress={() => setQuery(term)} />)}
-          <Button label="Favoritos" icon={onlyFavorites ? 'star' : 'star-outline'} selected={onlyFavorites}
+            <Button dense key={term} label={term} selected={query === term} onPress={() => setQuery(query === term ? '' : term)} />)}
+          <Button dense label="Favoritos" icon={onlyFavorites ? 'star' : 'star-outline'} selected={onlyFavorites}
             onPress={() => setOnlyFavorites(!onlyFavorites)} />
         </View>
         <CopyText kind="muted">{tr('{count} resultados · Base offline', { count: results.length })}</CopyText>
@@ -131,10 +131,11 @@ export function Entries({ section, edition, favorites, favorite, openCheats }: {
 }
 
 export function Items({ edition }: { edition: Edition }) {
+  const { language, tr } = useLocale();
   const [query, setQuery] = useState('');
   const [expanded, setExpanded] = useState('');
   const results = itemsFor(edition).filter(item =>
-    searchKey([item.name, item.category, item.effect].join(' ')).includes(searchKey(query.trim())));
+    searchKey([item.name, item.category, item.effect, item.location].join(' ')).includes(searchKey(query.trim())));
   return <FlatList style={layout.centered} contentContainerStyle={layout.list} data={results}
     keyExtractor={item => item.name} keyboardShouldPersistTaps="handled"
     ListEmptyComponent={<EmptyState title="Nenhum item encontrado" message="Tente buscar pelo nome, efeito ou categoria." />}
@@ -148,12 +149,15 @@ export function Items({ edition }: { edition: Edition }) {
         <Pressable accessibilityRole="button" accessibilityState={{ expanded: isOpen }}
           onPress={() => setExpanded(isOpen ? '' : item.name)} style={layout.row}>
           <Art name={item.art} size={48} />
-          <View style={layout.grow}><CopyText kind="title">{item.name}</CopyText><CopyText kind="muted">{item.category}</CopyText></View>
+          <View style={layout.grow}>
+            <CopyText kind="title">{item.name}</CopyText><CopyText kind="muted">{item.category}</CopyText>
+            {item.price !== undefined && <CopyText kind="accent">{tr('Preço · {price}', { price: '₽ ' + item.price.toLocaleString(language) })}</CopyText>}
+          </View>
           <Icon name={isOpen ? 'chevron-up' : 'information-circle-outline'} />
         </Pressable>
         {isOpen && <>
           <CopyText>{item.effect}</CopyText>
-          {!!item.location && <><CopyText kind="title">Onde encontrar</CopyText><CopyText>{item.location}</CopyText></>}
+          <CopyText kind="title">Onde encontrar</CopyText><CopyText>{item.location || 'Local ainda não confirmado para esta edição.'}</CopyText>
         </>}
       </Card>;
     }} />;
@@ -193,7 +197,7 @@ export function Machines({ edition, section, open }: {
     </Card>} />;
 }
 
-export function MachineDetail({ machine, edition, columns }: { machine: Machine; edition: Edition; columns: number }) {
+export function MachineDetail({ machine, edition, columns, open }: { machine: Machine; edition: Edition; columns: number; open: (id: number) => void }) {
   const { tr } = useLocale();
   const [query, setQuery] = useState('');
   const needle = searchKey(query.trim());
@@ -209,8 +213,10 @@ export function MachineDetail({ machine, edition, columns }: { machine: Machine;
       <CopyText kind="title">{tr('Pokémon compatíveis · {count}', { count: machine.learners.length })}</CopyText>
       <Search label="Buscar Pokémon compatível" value={query} onChange={setQuery} />
     </View>}
-    renderItem={({ item: [id, name] }) => <Card style={{ flex: 1, alignItems: 'center' }}>
-      <CopyText kind="accent">{dexNumber(id)}</CopyText><Art id={id} size={68} />
-      <CopyText style={{ textAlign: 'center' }}>{name}</CopyText>
+    renderItem={({ item: [id, name] }) => <Card style={{ flex: 1 }}>
+      <Pressable accessibilityRole="button" accessibilityLabel={name} onPress={() => open(id)} style={{ alignItems: 'center', minHeight: 44 }}>
+        <CopyText kind="accent">{dexNumber(id)}</CopyText><Art id={id} size={68} />
+        <CopyText style={{ textAlign: 'center' }}>{name}</CopyText>
+      </Pressable>
     </Card>} />;
 }

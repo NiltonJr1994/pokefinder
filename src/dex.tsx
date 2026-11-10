@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
-import { type Edition, type LearnedMove, type MoveMethod, type Pokemon, byId, defensiveMatchups, dexNumber, moveName, movesFor,
+import { type Edition, type LearnedMove, type MoveMethod, type Pokemon, byId, defensiveMatchups, dexNumber, gendersFor, generationOf, moveName, movesFor,
   pokemonFor, pokemonSize, searchKey, typesIn } from './catalog';
-import { Art, Badge, brand, Card, Choice, CopyText, GameLogo, Icon, type IconName, layout, Search, spriteDimensions,
+import { Art, Badge, brand, Button, Card, Choice, CopyText, GameLogo, Icon, type IconName, layout, Search, spriteDimensions,
   tone, TypeSymbol, Types, useTheme } from './ui';
 import { useLocale } from './locale';
+import { femaleArt, femaleSize } from './data/female-art';
 
 type Favorites = { favorites: number[]; favorite: (id: number) => void };
 const orders = ['Menor número', 'Maior número', 'A–Z', 'Z–A'];
@@ -52,6 +53,7 @@ function DexCard({ pokemon, edition, favorite, starred, open, width }: {
           <CopyText style={{ fontSize: 11, fontWeight: '800', lineHeight: 16 }}>Nº{dexNumber(pokemon.id).slice(1)}</CopyText>
           <CopyText kind="title" style={{ fontSize: 19, fontWeight: '900' }}>{pokemon.name}</CopyText>
           <Types values={types} />
+          <CopyText kind="muted" style={{ fontSize: 11 }}>{gendersFor(pokemon.id, edition).map(label => tr(label)).join(' · ')}</CopyText>
         </View>
         <View style={{ width: stacked ? '100%' : panelWidth, minHeight: 99,
           alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: color }}>
@@ -165,7 +167,7 @@ const effectiveness = [
   [4, 'Superefetivo'], [2, 'Superefetivo'], [1, 'Dano normal'], [.5, 'Pouco efetivo'], [.25, 'Pouco efetivo'], [0, 'Sem efeito'],
 ] as const;
 
-function Defense({ pokemon, edition }: { pokemon: Pokemon; edition: Edition }) {
+export function Defense({ pokemon, edition }: { pokemon: Pokemon; edition: Edition }) {
   const { language, tr } = useLocale();
   const incoming = defensiveMatchups(pokemon, edition);
   return <Card>
@@ -186,14 +188,18 @@ export function PokemonDetail({ pokemon, edition, favorites, favorite, open, bac
   const t = useTheme();
   const { tr, language } = useLocale();
   const { width } = useWindowDimensions();
-  const kanto = edition.region === 'kanto';
+  const generation = generationOf(edition);
+  const kanto = generation === 1;
+  const [female, setFemale] = useState(false);
+  const genders = gendersFor(pokemon.id, edition);
+  const showFemale = genders.includes('Fêmea') && (female || !genders.includes('Macho'));
   const types = typesIn(pokemon, edition);
   const color = tone(types[0]);
-  const stats = kanto ? pokemon.kantoStats : pokemon.stats;
+  const stats = kanto ? pokemon.kantoStats : pokemon.statsByGeneration[generation] ?? pokemon.stats;
   const names = kanto ? ['HP', 'Ataque', 'Defesa', 'Especial', 'Velocidade']
     : ['HP', 'Ataque', 'Defesa', 'At. Especial', 'Def. Especial', 'Velocidade'];
   const family = pokemon.family.filter(id => id !== pokemon.id && (!kanto || id <= 151))
-    .map(id => byId.get(id)).filter((related): related is Pokemon => Boolean(related));
+    .map(id => byId.get(id)).filter((related): related is Pokemon => Boolean(related && related.introduced <= generation));
   const locations = pokemon.locations[edition.version] ?? [];
   const measure = (value: number) => value.toLocaleString(language, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
@@ -203,7 +209,7 @@ export function PokemonDetail({ pokemon, edition, favorites, favorite, open, bac
       <View style={{ minHeight: Math.max(192, artHeight + 26), alignItems: 'center', justifyContent: 'center',
         backgroundColor: color, borderBottomLeftRadius: 84, borderBottomRightRadius: 84 }}>
         <TypeMark type={types[0]} size={144} />
-        <Art key={pokemon.id} id={pokemon.id} size={112} game={edition.version} animated />
+        <Art key={pokemon.id + '/' + showFemale} id={pokemon.id} size={112} game={edition.version} animated alternate={showFemale ? femaleArt[pokemon.id] : undefined} alternateSize={femaleSize[pokemon.id]} />
         <View style={{ position: 'absolute', top: 8, left: 11 }}>
           <HeroControl label={tr('Voltar')} icon="chevron-back" onPress={back} />
         </View>
@@ -220,6 +226,7 @@ export function PokemonDetail({ pokemon, edition, favorites, favorite, open, bac
           <Badge>{tr('Altura · {value} m', { value: measure(pokemon.height) })}</Badge>
           <Badge>{tr('Peso · {value} kg', { value: measure(pokemon.weight) })}</Badge>
           <Badge>{sizeNames[pokemonSize(pokemon)]}</Badge>
+          {genders.map(label => <Badge key={label}>{label}</Badge>)}
         </View>
       </View>
     <View style={layout.list}>
@@ -233,6 +240,10 @@ export function PokemonDetail({ pokemon, edition, favorites, favorite, open, bac
         <CopyText style={{ minWidth: 32, textAlign: 'right' }}>{value}</CopyText>
       </View>)}
     </Card>
+    {genders.length === 2 && femaleArt[pokemon.id] && <View style={layout.wrap}>
+      <Button dense label="Macho" selected={!female} onPress={() => setFemale(false)} />
+      <Button dense label="Fêmea" selected={female} onPress={() => setFemale(true)} />
+    </View>}
     <PokemonMoves key={edition.version + '/' + pokemon.id} pokemon={pokemon} edition={edition} />
     <Defense pokemon={pokemon} edition={edition} />
     <Card>

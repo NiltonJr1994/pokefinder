@@ -5,6 +5,15 @@ export const languages = {
   es: 'Español', ja: '日本語', 'zh-Hans': '简体中文',
 };
 export type Language = keyof typeof languages;
+
+export function deviceLanguage(tag = Intl.DateTimeFormat().resolvedOptions().locale): Language {
+  const locale = tag.toLowerCase().replace(/_/g, '-');
+  const [language, region] = locale.split('-');
+  if (language === 'pt') return region && region !== 'br' ? 'pt-PT' : 'pt-BR';
+  if (language === 'es' || language === 'ja' || language === 'en') return language;
+  if (language === 'zh') return 'zh-Hans';
+  return 'en';
+}
 export const Locale = createContext<Language>('pt-BR');
 export function useLocale() {
   const language = useContext(Locale);
@@ -15,6 +24,21 @@ export function useLocale() {
 }
 
 const rows = [
+  'Macho|Macho|Male|Macho|オス|雄性',
+  'Fêmea|Fêmea|Female|Hembra|メス|雌性',
+  'Sem gênero|Sem género|Genderless|Sin género|性別不明|无性别',
+  'Sem gênero nesta geração|Sem género nesta geração|No gender in this generation|Sin género en esta generación|この世代では性別なし|该世代无性别',
+  'Preço · {price}|Preço · {price}|Price · {price}|Precio · {price}|価格 · {price}|价格 · {price}',
+  'Local ainda não confirmado para esta edição.|Local ainda não confirmado para esta edição.|Location not yet confirmed for this edition.|Ubicación sin confirmar para esta edición.|このバージョンでの入手場所は未確認です。|该版本的获取地点尚未确认。',
+  'Verificar atualizações|Procurar atualizações|Check for updates|Buscar actualizaciones|更新を確認|检查更新',
+  'Verificando…|A verificar…|Checking…|Comprobando…|確認中…|正在检查…',
+  'Nenhuma atualização disponível|Nenhuma atualização disponível|No update available|No hay actualizaciones|利用できる更新はありません|暂无更新',
+  'Atualização disponível|Atualização disponível|Update available|Actualización disponible|更新があります|有可用更新',
+  'Não foi possível verificar atualizações|Não foi possível procurar atualizações|Could not check for updates|No se pudo buscar actualizaciones|更新を確認できませんでした|无法检查更新',
+  'Tela cheia|Ecrã inteiro|Full screen|Pantalla completa|全画面|全屏',
+  'Sair da tela cheia|Sair do ecrã inteiro|Exit full screen|Salir de pantalla completa|全画面を終了|退出全屏',
+  'Recorte regional · marcadores indicativos|Recorte regional · marcadores indicativos|Regional crop · approximate markers|Recorte regional · marcadores aproximados|地域マップ · おおよその目印|区域地图 · 标记为大致位置',
+
   'Área concluída|Área concluída|Area complete|Zona completada|エリア完了|区域已完成',
   'Ir para o próximo objetivo|Ir para o próximo objetivo|Go to the next goal|Ir al siguiente objetivo|次の目標へ|前往下一个目标',
   'Região|Região|Region|Región|地方|地区',

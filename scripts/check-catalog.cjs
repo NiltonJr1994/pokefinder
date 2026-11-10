@@ -28,20 +28,29 @@ const tiles = loadSource('data/yellow-map-tiles.ts', mapImage).yellowTiles;
 const regionalTiles = loadSource('data/region-tiles.ts', mapImage).regionTiles;
 const updates = loadSource('updates.tsx', id => {
   if (['react-native', './locale', './ui'].includes(id)) return {};
-  if (id === 'react') return { useRef: current => ({ current }), useCallback: fn => fn, useEffect: () => {} };
+  if (id === 'react') return { useRef: current => ({ current }), useCallback: fn => fn, useEffect: () => {}, useState: value => [value, () => {}] };
   return localRequire(id);
 });
 const remoteNotes = updates.parseReleases([
-  { tag_name: 'v8.3.1', body: 'Nota', draft: false, prerelease: false },
+  { tag_name: 'v8.3.1', body: 'Nota', draft: false, prerelease: false, assets: [{ name: 'PokeFinder-8.3.1-Android.apk', browser_download_url: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v8.3.1/PokeFinder-8.3.1-Android.apk' }] },
   { tag_name: 'v8.4.0', draft: true, prerelease: false },
   { tag_name: 'v8.5.0-beta', draft: false, prerelease: true },
   { tag_name: 'v9.0.0-beta', draft: false, prerelease: false },
 ]);
-assert.deepEqual(remoteNotes, [{ tag: '8.3.1', publishedTag: 'v8.3.1', body: 'Nota' }]);
+assert.deepEqual(remoteNotes, [{ tag: '8.3.1', publishedTag: 'v8.3.1', body: 'Nota', revision: 0, apk: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v8.3.1/PokeFinder-8.3.1-Android.apk' }]);
 let preferences = { remoteNotes, automatic: true, availableTag: '8.3.1', dismissedUpdate: '', nextCheck: 0, checkedVersion: '' };
 const saveUpdate = changes => { preferences = { ...preferences, ...changes }; };
+const sameTag = updates.parseReleases([{
+  tag_name: 'v4.5.0', draft: false, prerelease: false, body: '',
+  assets: [
+    { name: 'PokeFinder-4.5.0-Android-b45002.apk', browser_download_url: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v4.5.0/PokeFinder-4.5.0-Android-b45002.apk' },
+    { name: 'PokeFinder-4.5.0-ReactNative-Teste.apk', browser_download_url: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v4.5.0/PokeFinder-4.5.0-ReactNative-Teste.apk' },
+  ],
+}]);
+assert.equal(sameTag[0].revision, 45002);
+assert.equal(updates.useUpdates({ ...preferences, remoteNotes: sameTag, availableTag: '4.5.0' }, saveUpdate, true).tag, '4.5.0');
 const offered = updates.useUpdates(preferences, saveUpdate, true);
-assert.ok(offered.prompt && offered.url.endsWith('/releases/tag/v8.3.1'));
+assert.ok(offered.prompt && offered.url.endsWith('/releases/download/v8.3.1/PokeFinder-8.3.1-Android.apk'));
 assert.equal(offered.notes[0].body, 'Nota');
 offered.dismiss();
 assert.equal(updates.useUpdates(preferences, saveUpdate, true).prompt, false);
@@ -52,6 +61,8 @@ assert.equal(new Set(map.points.map(point => point.id)).size, map.points.length)
 for (const edition of catalog.editions) {
   const atlas = map.atlasFor(edition.version);
   assert.ok(atlas.areas.length >= 15 && atlas.regionalPoints.length >= 10, edition.version);
+  assert.ok(atlas.areas.every(area => area.illustrated), edition.version + ' areas without art: ' + atlas.areas.filter(area => !area.illustrated).map(area => area.id));
+  assert.ok(catalog.itemsFor(edition).some(item => item.price && item.location), edition.version);
   assert.equal(new Set(atlas.points.map(point => point.id)).size, atlas.points.length, edition.version);
   assert.ok(atlas.points.some(point => point.hidden));
   assert.ok(atlas.points.some(point => point.encounters?.length && point.types?.length));
@@ -110,7 +121,7 @@ for (const edition of catalog.editions) {
     reference.machines[edition.group].length);
   for (const pokemon of catalog.pokemonFor(edition)) {
     const { direct, inherited } = catalog.movesFor(pokemon.id, edition);
-    assert.ok(direct.some(move => move.method === 'level'), `${edition.title}/${pokemon.name}`);
+    if (edition.group <= 4) assert.ok(direct.some(move => move.method === 'level'), `${edition.title}/${pokemon.name}`);
     const machines = reference.machines[edition.group].filter(row => row.learners.some(([id]) => id === pokemon.id));
     assert.deepEqual(direct.filter(move => move.code).map(move => [move.code, catalog.moveName(move.id, 'en')]),
       machines.map(row => [row.code, row.move]));
@@ -120,6 +131,16 @@ for (const edition of catalog.editions) {
 }
 assert.equal(catalog.pokemonFor(catalog.editions[0]).length, 151);
 assert.equal(catalog.pokemonFor(catalog.editions.find(edition => edition.version === 'crystal')).length, 251);
+assert.equal(catalog.pokemonFor(catalog.editions.find(edition => edition.version === 'heartgold')).length, 493);
+const gymCatalog = require('../src/data/gyms.json');
+for (const [group, gyms] of Object.entries(gymCatalog)) {
+  assert.equal(gyms.length, [3,4,10].includes(Number(group)) ? 16 : 8);
+  for (const gym of gyms) {
+    assert.ok(fs.existsSync(path.resolve(__dirname, '../assets/gyms', gym.portrait)), gym.portrait);
+    assert.ok(fs.existsSync(path.resolve(__dirname, '../assets/gyms', gym.badgeArt)), gym.badgeArt);
+    assert.ok(gym.team.every(([id, level]) => catalog.byId.has(id) && level > 0));
+  }
+}
 assert.equal(catalog.byId.get(25).name, 'Pikachu');
 assert.equal(catalog.itemsFor(catalog.editions[0]).find(item => item.name === 'Coin').art, 'ref_coin');
 assert.ok(Object.values(reference.items).flat().every(item => item.art !== 'ref_item'));

@@ -4,14 +4,20 @@ A interface, a navegação e a lógica do app foram portadas de Kotlin e Compose
 
 ## Build de produção 4.5.0
 
+A revisão mantém o nome de versão 4.5.0 e usa o código Android 45001. Anexe `PokeFinder-4.5.0-Android-b45001.apk` à release estável `v4.5.0`. O sufixo identifica o código de compilação para o atualizador. Usuários da 4.5.0 inicial precisam baixar a revisão manualmente uma vez, pois a lógica anterior só comparava a tag. As próximas revisões precisam de um código maior e da mesma chave.
+
+A tela Atualizações permite verificar sob demanda. A consulta automática também é executada ao abrir o app se estiver habilitada. O botão Baixar abre o endereço do arquivo APK, e a instalação é confirmada no Android. Para uma nova versão com outra tag, o app aceita o nome `PokeFinder-X.Y.Z-Android.apk` ou o mesmo nome com sufixo `-bCODIGO` antes de `.apk`.
+
+Na Pokédex e nos ginásios, o quadro de dano aplica a tabela de tipos da geração e pode variar com habilidades e outros efeitos da batalha. Nos mapas de etapa, use o nome do local na ficha do marcador. Os recortes regionais usam posições indicativas onde falta confirmação pontual.
+
 Este arquivo-fonte inclui a configuração Android usada no APK de produção. Use os passos de compilação do README com a pasta `android/` incluída. A compilação local gera `app-release-unsigned.apk`. Use a ferramenta `zipalign` do Android SDK antes de assinar e `apksigner` para assinar e verificar. A senha pode ser digitada no terminal quando o assinador solicitar.
 
 ```powershell
 $buildTools = Join-Path $env:ANDROID_HOME "build-tools\36.0.0"
 $unsigned = "app/build/outputs/apk/release/app-release-unsigned.apk"
 & "$buildTools/zipalign.exe" -P 16 4 $unsigned "app-release-aligned.apk"
-& "$buildTools/apksigner.bat" sign --ks "C:\caminho\pokefinder-production.p12" --ks-key-alias pokefinder-production --out "PokeFinder-4.5.0-Android.apk" "app-release-aligned.apk"
-& "$buildTools/apksigner.bat" verify --verbose --print-certs "PokeFinder-4.5.0-Android.apk"
+& "$buildTools/apksigner.bat" sign --ks "C:\caminho\pokefinder-production.p12" --ks-key-alias pokefinder-production --out "PokeFinder-4.5.0-Android-b45001.apk" "app-release-aligned.apk"
+& "$buildTools/apksigner.bat" verify --verbose --print-certs "PokeFinder-4.5.0-Android-b45001.apk"
 ```
 
 Execute esses comandos dentro de `android/`. A chave de distribuição e a senha devem permanecer no ambiente privado do desenvolvedor. Guarde ambas para assinar futuras atualizações. A 4.5.0 inicia um novo canal de assinatura. Quem ainda tem a 1.2.0 precisa fazer uma instalação limpa, preservando antes os dados de que precisar.
@@ -24,7 +30,7 @@ Abra a Pokédex de Yellow e compare o dano Fantasma recebido por Mewtwo com o da
 
 Em **Mais → Mapa e Diário**, crie partidas em duas edições. Abra **Região**, selecione um marco, marque um Pokémon e conclua um objetivo. Confira os totais da área, o próximo objetivo e os dados depois de reabrir o app em modo avião. Restaure arquivos somente na edição correspondente. Backups antigos do piloto são reconhecidos como Yellow.
 
-As notas públicas usam a API de releases. Para testar o modal, disponibilize uma release estável de versão superior à instalada. Confirme que dispensar o aviso impede nova exibição para a mesma versão e que a nota continua disponível offline. **Atualizar** abre a página de download da release, onde o usuário escolhe o instalador compatível. A distribuição pública dos mapas e artes depende das condições de reutilização das fontes.
+As notas públicas usam a API de releases. Para testar o modal, disponibilize uma release estável de versão superior à instalada. Confirme que dispensar o aviso impede nova exibição para a mesma versão e que a nota continua disponível offline. **Atualizar** abre o endereço direto do APK de produção. A distribuição pública dos mapas e artes depende das condições de reutilização das fontes.
 
 Os encontros são gerados com `python scripts/prepare-map-encounters.py pasta-dos-csvs`. Os blocos regionais vêm de `python scripts/prepare-region-maps.py pasta-dos-checklists caminho-do-full-emerald.png`. Ambos os resultados já estão incluídos. [PokéAPI](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) · [Checklist Yellow](https://pokemoncompletion.com/completion/Yellow) · [Checklist Crystal](https://pokemoncompletion.com/completion/Crystal) · [Checklist Emerald](https://pokemoncompletion.com/completion/Emerald)
 

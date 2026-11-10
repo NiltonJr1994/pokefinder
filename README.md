@@ -17,7 +17,7 @@ O catálogo, os guias e as imagens incluídas no app funcionam offline. A verifi
 
 ### Histórico de versões
 
-- [v4.5.0](RELEASE-NOTES.md#v450) — Mapas, efetividade e atualizações. Primeira build deste canal de produção.
+- [v4.5.0](RELEASE-NOTES.md#v450) — Introdução ilustrada, ginásios, mapas em tela cheia, Pokédex ampliada e download direto das atualizações. Revisão 45001 do canal de produção.
 - [v4.4.0](RELEASE-NOTES.md#v440) — Golpes offline na Pokédex e ajuste do Mewtwo.
 - [v4.3.0](RELEASE-NOTES.md#v430) — Piloto de Mapa e Diário em Yellow.
 - [v4.2.1](RELEASE-NOTES.md#v421) — Redesenho dos símbolos de tipo, retorno à lista da Pokédex após abrir evoluções, logos de edição nos títulos e novos ícones de itens. Os créditos das animações e referências foram reunidos em Créditos.
@@ -46,7 +46,7 @@ Set-Location android
 .\gradlew.bat :app:assembleRelease
 ```
 
-O APK sem assinatura sai em `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Para distribuição, alinhe e assine com a chave de produção. O pacote usa `com.njsoftwares.pokecodefinder` e o código de versão `45000`. [Guia de migração e assinatura](MIGRACAO.md#build-de-produção-450)
+O APK sem assinatura sai em `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Para distribuição, alinhe e assine com a chave de produção. O pacote usa `com.njsoftwares.pokecodefinder` e o código de versão `45001`. [Guia de migração e assinatura](MIGRACAO.md#build-de-produção-450)
 
 ### Projeto de fã e direitos
 
@@ -67,7 +67,7 @@ The catalog, guides, and bundled images work offline. The optional update check 
 
 ### Release history
 
-- [v4.5.0](RELEASE-NOTES.md#v450) — Maps, type matchups, and updates. First build of this production channel.
+- [v4.5.0](RELEASE-NOTES.md#v450) — Illustrated onboarding, gym teams, full-screen maps, expanded Pokédex, and direct update downloads. Production build revision 45001.
 - [v4.4.0](RELEASE-NOTES.md#v440) — Offline Pokédex learnsets and Mewtwo alignment.
 - [v4.3.0](RELEASE-NOTES.md#v430) — Map and Journal pilot in Yellow.
 - [v4.2.1](RELEASE-NOTES.md#v421) — Redesigned type symbols, direct return to the Pokédex list after opening evolutions, edition logos in headings, and new item icons. Animation and reference attributions were consolidated in Credits.
@@ -96,7 +96,7 @@ Set-Location android
 .\gradlew.bat :app:assembleRelease
 ```
 
-The unsigned APK is written to `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Align and sign it with the production key before distributing it. The package is `com.njsoftwares.pokecodefinder` and the version code is `45000`. [Migration and signing guide](MIGRACAO.md#build-de-produção-450)
+The unsigned APK is written to `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Align and sign it with the production key before distributing it. The package is `com.njsoftwares.pokecodefinder` and the version code is `45001`. [Migration and signing guide](MIGRACAO.md#build-de-produção-450)
 
 ### Fan project and rights
 
@@ -136,6 +136,11 @@ PokeFinder is an independent educational project with no affiliation with or end
 - **PokémonCoders** e **PokeMundo**. O catálogo legado registra os dois nomes com o mesmo link para códigos de Crystal. / The legacy catalog lists both names with the same link for Crystal cheats. [Pokémon Crystal Cheats](https://www.pokemoncoders.com/pokemon-crystal-cheats/)
 - **Voxel / TecMundo**, **GameFAQs** e arquivos fornecidos ao projeto. Referências para Emerald e SoulSilver, além de listas fornecidas para FireRed (GBA) e HeartGold e SoulSilver (DS). / References for Emerald and SoulSilver, plus supplied code lists for FireRed (GBA) and HeartGold and SoulSilver (DS). [Voxel / TecMundo — Emerald](https://www.estadao.com.br/tecmundo/voxel/282528-pokemon-emerald-lista-master-codes-codigos-cheats-jogo-gba/) · [GameFAQs — SoulSilver](https://gamefaqs.gamespot.com/boards/960100-pokemon-soulsilver-version/53938430)
 - **Libretro**, **mGBA**, **melonDS Android** e **Datel**. Referências para usar cheats em emuladores e no Action Replay para GBA/DS. / References for using cheats in emulators and with Action Replay for GBA/DS. [Libretro](https://docs.libretro.com/guides/cheat-codes/) · [mGBA](https://github.com/mgba-emu/mgba/blob/master/src/platform/qt/CheatsView.cpp) · [melonDS Android](https://github.com/rafaelvcaetano/melonDS-android/wiki/Cheats) · [Manual Datel / Datel manual](https://uk.codejunkies.com/support_downloads/ARMAX_GBA_DS_English.pdf)
+
+- **Pokémon Database**. Equipes e retratos dos líderes / Gym teams and portraits. [Guias por edição / Edition guides](https://pokemondb.net/yellow/gymleaders-elitefour)
+- **Stephen Griffiths**. Insígnias de Kanto, Johto e Hoenn, recortadas da arte original sob CC BY 3.0 / Kanto, Johto, and Hoenn badge crops under CC BY 3.0. [Arte e licença / Artwork and license](https://github.com/SteGriff/pokemon-badges)
+- **pret**. Tabelas de lojas, preços, dados de obtenção e reconstrução gráfica das Sevii Islands / Shop and acquisition data and Sevii Islands map reconstruction. [Projetos / Projects](https://github.com/pret)
+- **Libretro, mGBA e melonDS Android**. Referências dos tutoriais de cheats / Cheat tutorial references. [Libretro](https://docs.libretro.com/guides/cheat-codes/) · [mGBA](https://mgba.io/) · [melonDS Android](https://github.com/rafaelvcaetano/melonDS-android/wiki/Cheats)
 
 ### Referências técnicas / Technical references
 

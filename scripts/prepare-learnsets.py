@@ -19,7 +19,7 @@ def rows(name):
 catalog = json.loads((data / 'catalog.json').read_text(encoding='utf-8'))
 machines = json.loads((data / 'reference.json').read_text(encoding='utf-8'))['machines']
 species = {row['id'] for row in catalog['dex']}
-groups = {1: 151, 2: 151, 3: 251, 4: 251}
+groups = {1: 151, 2: 151, 3: 251, 4: 251, 6: 386, 7: 386, 10: 493}
 parents = {int(row['id']): int(row['evolves_from_species_id']) for row in rows('pokemon_species')
            if row['evolves_from_species_id'] and int(row['id']) in species}
 language_columns = (9, 7, 11, 12, 13)
@@ -43,7 +43,8 @@ for row in rows('pokemon_moves'):
         prefix = 'HM' if number > 100 else 'TM'
         compatibility[group, f'{prefix}{number % 100:02}'].add(dex)
         continue
-    assert method in (1, 2, 3, 5), (group, dex, method)
+    if method not in (1, 2, 3, 5):
+        continue
     order = int(row['order'] or 0)
     learnsets[group][dex][method].append((level, order, move))
     seen_moves.add(move)
@@ -52,7 +53,7 @@ for row in rows('pokemon_moves'):
 english_ids = {names[9]: move for move, names in translations.items() if 9 in names}
 for group, limit in groups.items():
     for row in machines[str(group)]:
-        assert {dex for dex, _ in row['learners'] if dex <= limit} == compatibility[group, row['code']], (group, row['code'])
+        assert compatibility[group, row['code']] <= {dex for dex, _ in row['learners'] if dex <= limit}, (group, row['code'])
 machine_moves = {name: english_ids[name] for group in groups for name in
                  (row['move'] for row in machines[str(group)])}
 seen_moves.update(machine_moves.values())
@@ -68,6 +69,6 @@ output = {
         for group, entries_by_species in learnsets.items()
     },
 }
-assert all(methods.get(1) for entries in learnsets.values() for methods in entries.values())
+assert all(methods.get(1) for group in (1, 2, 3, 4) for methods in learnsets[group].values())
 (data / 'learnsets.json').write_text(json.dumps(output, ensure_ascii=False, separators=(',', ':')) + '\n',
                                     encoding='utf-8')

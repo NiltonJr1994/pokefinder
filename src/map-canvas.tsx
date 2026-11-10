@@ -40,6 +40,7 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
   const frame = useRef({ screen, camera, fit: 1 });
   const anchor = useRef<{ finger: Sample; camera: Camera } | undefined>(undefined);
   const didLayout = useRef(false);
+  const maxZoom = area.id === 'region' ? 18 : 8;
   const fit = Math.min(screen.width / area.width, screen.height / area.height) || 1;
   frame.current = { screen, camera, fit };
 
@@ -67,7 +68,7 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
         anchor.current = { finger: fingers, camera: frame.current.camera };
         return;
       }
-      const zoom = clamp(start.camera.zoom * fingers.distance / start.finger.distance, 1, 5);
+      const zoom = clamp(start.camera.zoom * fingers.distance / start.finger.distance, 1, maxZoom);
       const ratio = zoom / start.camera.zoom;
       const centerX = origin.current.x + frame.current.screen.width / 2;
       const centerY = origin.current.y + frame.current.screen.height / 2;
@@ -81,7 +82,10 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
   const scale = fit * camera.zoom;
   const left = (screen.width - area.width * scale) / 2 + camera.x;
   const top = (screen.height - area.height * scale) / 2 + camera.y;
-  const level = scale * PixelRatio.get() >= .85 ? 'high' : 'low';
+  const sourceRect = area.backdrop ?? { x: 0, y: 0, width: area.width, height: area.height };
+  const sx = area.width * scale / sourceRect.width;
+  const sy = area.height * scale / sourceRect.height;
+  const level = sx * PixelRatio.get() >= .85 ? 'high' : 'low';
   const tiles = area.regional ? regionTiles[area.regional + '_' + level] : area.illustrated ? yellowTiles[area.id][level] : [];
   const groups: { x: number; y: number; markers: Marker[] }[] = [];
   for (const marker of markers) {
@@ -93,7 +97,7 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
     else groups.push({ x, y, markers: [marker] });
   }
   function zoomBy(multiplier: number) {
-    const next = clamp(camera.zoom * multiplier, 1, 5);
+    const next = clamp(camera.zoom * multiplier, 1, maxZoom);
     apply({ zoom: next, x: camera.x * next / camera.zoom, y: camera.y * next / camera.zoom });
   }
   function place(event: GestureResponderEvent) {
@@ -128,11 +132,15 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
           <CopyText style={{ position: 'absolute', top: 8, left: 12, color: '#E8F7F8', fontWeight: '700' }}>{area.title}</CopyText>
           <CopyText style={{ position: 'absolute', bottom: 7, left: 12, color: '#BFE2E6', fontSize: 11 }}>Esquema da etapa</CopyText>
         </View>}
-        {tiles.filter(tile => left + tile.x * scale < screen.width && top + tile.y * scale < screen.height &&
-          left + (tile.x + tile.width) * scale > 0 && top + (tile.y + tile.height) * scale > 0)
-          .map(tile => <Image key={level + '/' + tile.x + '/' + tile.y} source={tile.image} contentFit="fill"
-            cachePolicy="memory" accessible={false} style={{ position: 'absolute', left: left + tile.x * scale,
-              top: top + tile.y * scale, width: tile.width * scale + .2, height: tile.height * scale + .2 }} />)}
+        <View style={{ position: 'absolute', left, top, width: area.width * scale, height: area.height * scale, overflow: 'hidden' }}>
+          {tiles.filter(tile => tile.x < sourceRect.x + sourceRect.width && tile.y < sourceRect.y + sourceRect.height &&
+            tile.x + tile.width > sourceRect.x && tile.y + tile.height > sourceRect.y &&
+            left + (tile.x - sourceRect.x) * sx < screen.width && top + (tile.y - sourceRect.y) * sy < screen.height &&
+            left + (tile.x + tile.width - sourceRect.x) * sx > 0 && top + (tile.y + tile.height - sourceRect.y) * sy > 0)
+            .map(tile => <Image key={level + '/' + tile.x + '/' + tile.y} source={tile.image} contentFit="fill"
+              cachePolicy="memory" accessible={false} style={{ position: 'absolute', left: (tile.x - sourceRect.x) * sx,
+                top: (tile.y - sourceRect.y) * sy, width: tile.width * sx + .2, height: tile.height * sy + .2 }} />)}
+        </View>
       </View>}
       {placing ? <Pressable accessibilityLabel={tr('Marcar ponto no mapa')} style={StyleSheet.absoluteFill} onPress={place} />
         : groups.map(group => {
