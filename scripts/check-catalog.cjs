@@ -40,14 +40,16 @@ const remoteNotes = updates.parseReleases([
 assert.deepEqual(remoteNotes, [{ tag: '8.3.1', publishedTag: 'v8.3.1', body: 'Nota', revision: 0, apk: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v8.3.1/PokeFinder-8.3.1-Android.apk' }]);
 let preferences = { remoteNotes, automatic: true, availableTag: '8.3.1', dismissedUpdate: '', nextCheck: 0, checkedVersion: '' };
 const saveUpdate = changes => { preferences = { ...preferences, ...changes }; };
+const nextRevision = require('../src/data/build.json').androidVersionCode + 1;
+const nextApk = 'PokeFinder-4.5.0-Android-b' + nextRevision + '.apk';
 const sameTag = updates.parseReleases([{
   tag_name: 'v4.5.0', draft: false, prerelease: false, body: '',
   assets: [
-    { name: 'PokeFinder-4.5.0-Android-b45002.apk', browser_download_url: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v4.5.0/PokeFinder-4.5.0-Android-b45002.apk' },
+    { name: nextApk, browser_download_url: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v4.5.0/' + nextApk },
     { name: 'PokeFinder-4.5.0-ReactNative-Teste.apk', browser_download_url: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v4.5.0/PokeFinder-4.5.0-ReactNative-Teste.apk' },
   ],
 }]);
-assert.equal(sameTag[0].revision, 45002);
+assert.equal(sameTag[0].revision, nextRevision);
 assert.equal(updates.useUpdates({ ...preferences, remoteNotes: sameTag, availableTag: '4.5.0' }, saveUpdate, true).tag, '4.5.0');
 const offered = updates.useUpdates(preferences, saveUpdate, true);
 assert.ok(offered.prompt && offered.url.endsWith('/releases/download/v8.3.1/PokeFinder-8.3.1-Android.apk'));
@@ -76,11 +78,46 @@ for (const edition of catalog.editions) {
     assert.match(point.id, /^[a-z0-9-]{1,70}$/);
     assert.ok(point.x >= area.x && point.x <= area.x + area.width && point.y >= area.y && point.y <= area.y + area.height, point.id);
   }
-  const fixture = { version: 1, edition: edition.version, active: 'p1', profiles: [
+  const fixture = { version: 1, coordinateRevision: 2, edition: edition.version, active: 'p1', profiles: [
     { id: 'p1', name: 'Teste', area: atlas.areas[0].id, marks: {}, custom: [] },
   ] };
   assert.deepEqual(JSON.parse(JSON.stringify(map.readJournal(JSON.stringify(fixture), edition.version))), fixture);
 }
+// Spatial regressions: source CRS and background crops must resolve to the same pixel.
+function worldPoint(version, id) {
+  const atlas = map.atlasFor(version), point = atlas.points.find(p => p.id === id), rect = atlas.byArea(point.area).backdrop;
+  assert.equal(point.mapped, true, id);
+  return [rect.x + point.x / 480 * rect.width, rect.y + point.y / 430 * rect.height];
+}
+function close(actual, expected) { actual.forEach((n,i) => assert.ok(Math.abs(n-expected[i]) < .001, `${actual} != ${expected}`)); }
+close(worldPoint('yellow', 'league-story'), [20.5, 54]); // image-reviewed champion room
+close(worldPoint('yellow', 'viridian-item-0'), [228.745, 427.45]); // Poké Mart, never the town-center grid slot
+close(worldPoint('yellow', 'viridian-item-1'), [198.87, 397.525]); // hidden Potion on the NW cut tree
+close(worldPoint('yellow', 'pallet-pallet-town-129'), [202.42, 562.7625]); // pond, not the grass by the lab
+close(worldPoint('yellow', 'viridian-kanto-route-2-16'), [203.87, 345.6125]); // Route 2, outside Viridian City
+for (const edition of catalog.editions) {
+  const atlas = map.atlasFor(edition.version);
+  assert.ok(atlas.points.every(p => typeof p.mapped === 'boolean'));
+  for (const area of atlas.areas.filter(a => a.backdrop && !a.regional.startsWith('sevii'))) {
+    assert.ok(Math.abs(area.backdrop.width / area.backdrop.height - 480/430) < .0001);
+  }
+  // Reproject user-created markers once; keep every status, note and pin intact.
+  const corrections = require('../src/data/map-corrections.json')[edition.version];
+  const area = atlas.areas.find(a => corrections.areas[a.id].oldFrame);
+  const c = corrections.areas[area.id], frame = c.oldFrame;
+  const custom = { id:'custom-test', area:area.id, category:'item', title:'Meu ponto', description:'Nota',
+    x:frame.x+frame.width*.2, y:frame.y+frame.height*.7 };
+  const mark = { status:1, note:'Concluído', pinned:true };
+  const previous = { version:1, edition:edition.version, active:'test', profiles:[
+    { id:'test', name:'Meu save', area:area.id, marks:{'custom-test':mark}, custom:[custom] }] };
+  const migrated = map.readJournal(JSON.stringify(previous), edition.version);
+  const point = migrated.profiles[0].custom[0];
+  close([c.rect.x+point.x/480*c.rect.width,c.rect.y+point.y/430*c.rect.height],
+    [c.old.x+c.old.width*.2,c.old.y+c.old.height*.7]);
+  assert.deepEqual(migrated.profiles[0].marks['custom-test'], {...mark,at:undefined});
+  assert.deepEqual(map.readJournal(JSON.stringify(migrated),edition.version),migrated);
+}
+
 for (const area of map.areas) {
   const grid = tiles[area.id];
   assert.deepEqual([grid.width, grid.height], [area.width, area.height]);

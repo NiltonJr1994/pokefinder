@@ -114,6 +114,8 @@ export function Credits() {
       ['Bulbapedia · Size and weight variation', 'https://bulbapedia.bulbagarden.net/wiki/Size_and_weight_variation'],
       ['Logos das edições / Game edition logos · arquivo fornecido / supplied archive', ''],
       ['Pokémon 100% Checklist · atlas de ícones / item icon atlas', 'https://pokemoncompletion.com/completion/Yellow'],
+      ['RainingChain · coordenadas de mapas / map coordinates (GPL-3.0)', 'https://github.com/RainingChain/pokemoncompletion'],
+      ['ZaidusRecon · mapas de Yellow e Crystal; Jaxson Keenes · mapa de Emerald', 'https://pokemoncompletion.com/'],
       ['Pokémon 100% Checklist · mapa de Yellow / Yellow map', 'https://pokemoncompletion.com/completion/Yellow'],
       ['Pokémon 100% Checklist · mapa de Crystal / Crystal map', 'https://pokemoncompletion.com/completion/Crystal'],
       ['Pokémon 100% Checklist · mapa de Emerald / Emerald map', 'https://pokemoncompletion.com/completion/Emerald'],

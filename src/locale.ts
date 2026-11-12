@@ -37,6 +37,9 @@ const rows = [
   'Não foi possível verificar atualizações|Não foi possível procurar atualizações|Could not check for updates|No se pudo buscar actualizaciones|更新を確認できませんでした|无法检查更新',
   'Tela cheia|Ecrã inteiro|Full screen|Pantalla completa|全画面|全屏',
   'Sair da tela cheia|Sair do ecrã inteiro|Exit full screen|Salir de pantalla completa|全画面を終了|退出全屏',
+  'Ações sem posição confirmada estão disponíveis no Diário.|As ações sem posição confirmada estão disponíveis no Diário.|Actions without confirmed coordinates are available in the Journal.|Las acciones sin posición confirmada están disponibles en el Diario.|位置未確認のアクションは日記で確認できます。|未确认位置的行动可在日志中查看。',
+  'Posição exata ainda não confirmada.|Posição exata ainda não confirmada.|Exact position has not been confirmed yet.|La posición exacta aún no está confirmada.|正確な位置はまだ確認されていません。|确切位置尚未确认。',
+  'Área de ocorrência; não representa um encontro fixo.|Área de ocorrência; não representa um encontro fixo.|Encounter area; this is not a fixed spawn.|Zona de aparición; no representa un encuentro fijo.|出現エリアです。固定出現位置ではありません。|出现区域，并非固定出现点。',
   'Recorte regional · marcadores indicativos|Recorte regional · marcadores indicativos|Regional crop · approximate markers|Recorte regional · marcadores aproximados|地域マップ · おおよその目印|区域地图 · 标记为大致位置',
 
   'Área concluída|Área concluída|Area complete|Zona completada|エリア完了|区域已完成',

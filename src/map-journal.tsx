@@ -207,9 +207,10 @@ export function MapJournal({ edition }: { edition: Edition }) {
             disabled={!placing && profile.custom.length >= 100} onPress={() => setPlacing(!placing)} />
         </View>
         {placing && <CopyText kind="muted">Toque em um local no mapa para criar um ponto pessoal.</CopyText>}
-        {area.backdrop && <CopyText kind="muted">Recorte regional · marcadores indicativos</CopyText>}
+        {mapPoints.some(point => point.mapped === false) && <CopyText kind="muted">Ações sem posição confirmada estão disponíveis no Diário.</CopyText>}
         <MapCanvas key={profile.id + '/' + area.id} area={area} placing={placing}
-          focus={allPoints.find(point => point.id === profile.lastPoint)}
+          focus={allPoints.find(point => point.id === profile.lastPoint && point.mapped !== false) ??
+            mapPoints.find(point => point.category === 'objective' && point.mapped) ?? mapPoints.find(point => point.mapped)}
           markers={mapPoints.map(point => ({ point, done: isComplete(point, markOf(point)) }))}
           onOpen={group => group.length === 1 ? open(group[0]) : setCluster(group)}
           onPlace={(x, y) => { setNewPosition({ area: area.id, x, y }); setPlacing(false); setPanel('newPoint'); }} />
@@ -345,6 +346,8 @@ function PointPanel({ point, edition, areaTitle, mark, canUndo, close, undo, sta
       <View style={layout.grow}><CopyText kind="title">{point.place}</CopyText><CopyText kind="muted">{areaTitle}</CopyText></View>
     </View>
     {!!point.description && <CopyText>{point.description}</CopyText>}
+    {point.mapped === false && <CopyText kind="muted">Posição exata ainda não confirmada.</CopyText>}
+    {point.positionKind === 'encounter' && <CopyText kind="muted">Área de ocorrência; não representa um encontro fixo.</CopyText>}
     {gym && <GymDetails gym={gym} edition={edition} />}
     {point.hidden && <Badge>Item escondido</Badge>}
     {!!point.types?.length && <Types values={point.types} />}
@@ -362,7 +365,7 @@ function PointPanel({ point, edition, areaTitle, mark, canUndo, close, undo, sta
     </View>
     <View style={layout.wrap}>
       <Button label={mark.pinned ? 'Desafixar' : 'Fixar no diário'} icon="pin-outline" onPress={pin} />
-      <Button label="Ver no mapa" icon="locate-outline" onPress={locate} />
+      <Button label="Ver no mapa" icon="locate-outline" disabled={point.mapped === false} onPress={locate} />
       {canUndo && <Button label="Desfazer" icon="arrow-undo-outline" onPress={undo} />}
     </View>
     <Input label="Anotação" value={draft} change={setDraft} limit={500} multiline />

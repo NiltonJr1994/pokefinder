@@ -1,3 +1,27 @@
+# Correção atual / Current correction
+
+### Correção dos mapas · revisão Android 45002
+
+- Corrigida a conversão de coordenadas entre as peças e a imagem completa de Yellow, incluindo o deslocamento vertical de 28 unidades.
+- Removida a distribuição artificial de ações em grade. Cada pino publicado usa uma posição da referência ou uma área de encontro associada aos dados da edição.
+- Recortes das etapas agora abrangem as rotas e os interiores referenciados pelos pontos, sem deformar a imagem. Zoom ampliado e botão de ampliar coerente com o limite real.
+- Pontos sem posição confirmada continuam no Diário, com progresso e anotações; não recebem um pino inventado. Posições de ações dos remakes não são copiadas de plantas de gerações antigas.
+- Marcadores pessoais são convertidos para o novo enquadramento, preservando sua posição no mapa, status e notas. Backups antigos continuam aceitos.
+- Mantida a versão 4.5.0. Revisão interna 45002, assinada com a mesma chave de produção da compilação anterior.
+
+Limite conhecido: os mapas continuam usando as bases de referência existentes. As associações de áreas de encontro precisam de conferência durante o jogo; esta revisão não certifica cada evento de cada andar de todas as edições. Consulte THIRD_PARTY_MAPS.md para fontes, conversões e auditoria.
+
+### Map corrections · Android build revision 45002
+
+- Fixed coordinate conversion between Yellow's tiles and full image, including the 28-unit vertical offset.
+- Removed artificial grid placement. Published pins use a reference position or an encounter area associated with edition-specific data.
+- Stage crops now include referenced routes and interiors without stretching the artwork. Higher zoom and a zoom button that respects the actual limit.
+- Actions without confirmed coordinates remain in the Journal with progress and notes; they do not receive fabricated map pins. Remake action tiles are not transferred from older-generation layouts.
+- Personal markers are reprojected without changing their map position, status or notes. Older backups remain supported.
+- Version remains 4.5.0. Internal revision 45002 uses the same production signing key as the previous build.
+
+Known limit: existing reference artwork is retained. Encounter-area associations still need gameplay review; this revision does not certify every event on every floor in every edition. See THIRD_PARTY_MAPS.md for sources, conversion details and the audit.
+
 # Histórico de versões / Release history
 
 Histórico das versões identificadas nos APKs, projetos e guias disponíveis. As entradas antigas descrevem o material preservado.

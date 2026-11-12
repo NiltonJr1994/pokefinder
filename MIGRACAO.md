@@ -4,7 +4,7 @@ A interface, a navegação e a lógica do app foram portadas de Kotlin e Compose
 
 ## Build de produção 4.5.0
 
-A revisão mantém o nome de versão 4.5.0 e usa o código Android 45001. Anexe `PokeFinder-4.5.0-Android-b45001.apk` à release estável `v4.5.0`. O sufixo identifica o código de compilação para o atualizador. Usuários da 4.5.0 inicial precisam baixar a revisão manualmente uma vez, pois a lógica anterior só comparava a tag. As próximas revisões precisam de um código maior e da mesma chave.
+A revisão mantém o nome de versão 4.5.0 e usa o código Android 45001. Anexe `PokeFinder-4.5.0-Android-b45002.apk` à release estável `v4.5.0`. O sufixo identifica o código de compilação para o atualizador. Usuários da 4.5.0 inicial precisam baixar a revisão manualmente uma vez, pois a lógica anterior só comparava a tag. As próximas revisões precisam de um código maior e da mesma chave.
 
 A tela Atualizações permite verificar sob demanda. A consulta automática também é executada ao abrir o app se estiver habilitada. O botão Baixar abre o endereço do arquivo APK, e a instalação é confirmada no Android. Para uma nova versão com outra tag, o app aceita o nome `PokeFinder-X.Y.Z-Android.apk` ou o mesmo nome com sufixo `-bCODIGO` antes de `.apk`.
 
@@ -16,8 +16,8 @@ Este arquivo-fonte inclui a configuração Android usada no APK de produção. U
 $buildTools = Join-Path $env:ANDROID_HOME "build-tools\36.0.0"
 $unsigned = "app/build/outputs/apk/release/app-release-unsigned.apk"
 & "$buildTools/zipalign.exe" -P 16 4 $unsigned "app-release-aligned.apk"
-& "$buildTools/apksigner.bat" sign --ks "C:\caminho\pokefinder-production.p12" --ks-key-alias pokefinder-production --out "PokeFinder-4.5.0-Android-b45001.apk" "app-release-aligned.apk"
-& "$buildTools/apksigner.bat" verify --verbose --print-certs "PokeFinder-4.5.0-Android-b45001.apk"
+& "$buildTools/apksigner.bat" sign --ks "C:\caminho\pokefinder-production.p12" --ks-key-alias pokefinder-production --out "PokeFinder-4.5.0-Android-b45002.apk" "app-release-aligned.apk"
+& "$buildTools/apksigner.bat" verify --verbose --print-certs "PokeFinder-4.5.0-Android-b45002.apk"
 ```
 
 Execute esses comandos dentro de `android/`. A chave de distribuição e a senha devem permanecer no ambiente privado do desenvolvedor. Guarde ambas para assinar futuras atualizações. A 4.5.0 inicia um novo canal de assinatura. Quem ainda tem a 1.2.0 precisa fazer uma instalação limpa, preservando antes os dados de que precisar.

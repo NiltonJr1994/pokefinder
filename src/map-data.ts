@@ -1,5 +1,6 @@
 import routes from './data/map-routes.json';
 import encounterData from './data/map-encounters.json';
+import spatialData from './data/map-corrections.json';
 import regionData from './data/region-maps.json';
 import { editions, itemsFor, machinesFor } from './catalog';
 
@@ -25,7 +26,7 @@ export const statuses = {
 export type Point = {
   id: string; area: AreaId; category: Category; title: string; place: string; description: string;
   x: number; y: number; requirement?: string; species?: number; art?: string; spoiler?: boolean;
-  hidden?: boolean; types?: string[]; encounters?: { method: string; subarea: string; low: number; high: number }[];
+  mapped?: boolean; positionKind?: 'exact' | 'encounter'; hidden?: boolean; types?: string[]; encounters?: { method: string; subarea: string; low: number; high: number }[];
 };
 export const points: Point[] = [
   { id: 'pallet-oak', area: 'pallet', category: 'npc', title: 'Professor Oak', place: 'Laboratório do Professor Oak',
@@ -77,6 +78,10 @@ const landmarks: Record<string, string> = {
   'kanto-power': 'Kanto Power Plant', 'kanto-blue': 'Viridian City', silver: 'Silver Cave', norman: 'Petalburg City',
 };
 
+type Rect = { x: number; y: number; width: number; height: number };
+type SpatialCorrection = { areas: Record<string, { old: Rect; oldFrame?: Rect; rect: Rect }>;
+  points: Record<string, { pos: number[]; kind: 'exact' | 'encounter'; reference: string }> };
+
 function buildAtlas(version: string) {
   const edition = editions.find(entry => entry.version === version)!;
   const region = edition.group === 6 ? 'hoenn' : [3, 4, 10].includes(edition.group) ? 'johto' : 'kanto';
@@ -120,7 +125,7 @@ function buildAtlas(version: string) {
   for (const stage of stages) {
     const area = byArea(stage.id);
     const xy = (x: number, y: number) => ({ x: area.x + x * area.width, y: area.y + y * area.height });
-    const pilot = area.illustrated && !area.regional ? points.filter(point => point.area === stage.id) : [];
+    const pilot = area.illustrated && !area.regional ? points.filter(point => point.area === stage.id).map(point => ({ ...point })) : [];
     atlasPoints.push(...pilot);
     const goal: Point = { id: stage.id + '-story', area: stage.id, category: 'objective', title: stage.goal,
       place: stage.title, description: stage.how, ...xy(.5, area.backdrop ? .5 : .22) };
@@ -144,12 +149,12 @@ function buildAtlas(version: string) {
       if (pilot.some(point => point.category === 'item' && point.title === name)) continue;
       atlasPoints.push({ id: stage.id + '-item-' + index, area: stage.id, category: 'item',
         title: name, place, description: how, hidden, art: itemArt.get(name) ?? hmArt.get(name.split(' ')[0]),
-        ...xy(hidden ? .7 : .3, .45) });
+        ...xy(.5, .5) });
     }
     for (const [index, [title, place, description]] of (stage.npcs ?? []).entries()) {
       if (pilot.some(point => point.category === 'npc' && point.title === title)) continue;
       atlasPoints.push({ id: stage.id + '-npc-' + index, area: stage.id, category: 'npc',
-        title, place, description, ...xy(.5, .45) });
+        title, place, description, ...xy(.5, .5) });
     }
     const wildRows = wild[version]?.[stage.id] ?? [];
     const places = [...new Set(wildRows.map(([id]) => id))];
@@ -164,7 +169,29 @@ function buildAtlas(version: string) {
       const i = places.indexOf(location);
       atlasPoints.push({ id: stage.id + '-' + location + '-' + species, area: stage.id, category: 'pokemon',
         title, place, species, types, description: 'Encontro selvagem nesta área.', encounters,
-        ...xy(.22 + (i % 4) * .18, .63 + .28 * Math.floor(i / 4) / Math.max(1, Math.ceil(places.length / 4) - 1)) });
+        ...xy(.5, .5) });
+    }
+  }
+  // Coordinates and crop are one reference frame. Never distribute events on a grid.
+  const spatial = (spatialData as Record<string, SpatialCorrection>)[version];
+  for (const area of areaList) {
+    const corrected = spatial?.areas[area.id];
+    if (corrected?.oldFrame) Object.assign(area, { x: 0, y: 0, width: 480, height: 430,
+      regional: regionalKey, illustrated: true, backdrop: corrected.rect });
+  }
+  for (const point of atlasPoints) {
+    const placement = spatial?.points[point.id];
+    const area = byArea(point.area);
+    const rect = area.backdrop;
+    point.mapped = !!placement && !!rect;
+    if (point.mapped && rect && placement) {
+      point.x = (placement.pos[0] - rect.x) / rect.width * area.width;
+      point.y = (placement.pos[1] - rect.y) / rect.height * area.height;
+      point.positionKind = placement.kind;
+    } else {
+      // Still available in the diary; no fabricated location is rendered on the map.
+      point.x = area.x + area.width / 2;
+      point.y = area.y + area.height / 2;
     }
   }
   return { areas: areaList, points: atlasPoints, goals, byArea, regional, regionalPoints };
@@ -184,8 +211,8 @@ export type Profile = {
   id: string; name: string; area: AreaId; lastPoint?: string;
   marks: Record<string, Mark>; custom: Point[];
 };
-export type Journal = { version: 1; edition?: string; active: string; profiles: Profile[] };
-export const blankJournal: Journal = { version: 1, active: '', profiles: [] };
+export type Journal = { coordinateRevision?: 2; version: 1; edition?: string; active: string; profiles: Profile[] };
+export const blankJournal: Journal = { coordinateRevision: 2, version: 1, active: '', profiles: [] };
 export const journalLimit = 600000;
 export const blankMark: Mark = { status: 0, note: '', pinned: false };
 export const isComplete = (point: Point, mark: Mark = blankMark) => mark.status === statuses[point.category].length - 1;
@@ -203,7 +230,9 @@ export function readJournal(raw: string, edition = 'yellow'): Journal {
   const value: unknown = JSON.parse(raw);
   if (!isRecord(value) || value.version !== 1 || (value.edition ?? 'yellow') !== edition || typeof value.active !== 'string' ||
     !Array.isArray(value.profiles) || value.profiles.length > 20) throw new Error('Invalid journal');
+  if (value.coordinateRevision !== undefined && value.coordinateRevision !== 2) throw new Error('Unknown coordinates');
   const { areas, points, byArea } = atlasFor(edition);
+  const spatial = (spatialData as Record<string, SpatialCorrection>)[edition];
   const areaIds = new Set(areas.map(area => area.id));
   const seen = new Set<string>();
   const profiles = value.profiles.map(profile => {
@@ -220,11 +249,20 @@ export function readJournal(raw: string, edition = 'yellow'): Journal {
         typeof point.x !== 'number' || typeof point.y !== 'number' ||
         !Number.isFinite(point.x) || !Number.isFinite(point.y)) throw new Error('Invalid custom point');
       const area = byArea(point.area as AreaId);
-      if (point.x < area.x || point.x > area.x + area.width || point.y < area.y || point.y > area.y + area.height)
+      const correction = spatial?.areas[area.id];
+      let x = point.x, y = point.y;
+      if (value.coordinateRevision === undefined && correction?.oldFrame) {
+        const frame = correction.oldFrame, old = correction.old, rect = correction.rect;
+        if (x < frame.x || x > frame.x + frame.width || y < frame.y || y > frame.y + frame.height)
+          throw new Error('Invalid legacy coordinates');
+        x = (old.x + (x - frame.x) / frame.width * old.width - rect.x) / rect.width * area.width;
+        y = (old.y + (y - frame.y) / frame.height * old.height - rect.y) / rect.height * area.height;
+      }
+      if (x < area.x || x > area.x + area.width || y < area.y || y > area.y + area.height)
         throw new Error('Invalid coordinates');
       ids.add(point.id);
       return { id: point.id, area: area.id, category: point.category as Category, title: point.title as string,
-        place: area.title, description: point.description as string, x: point.x, y: point.y };
+        place: area.title, description: point.description as string, x, y };
     });
     const keyToCategory = new Map([...points, ...custom].map(point => [progressKey(point), point.category]));
     const marks: Record<string, Mark> = {};
@@ -246,5 +284,5 @@ export function readJournal(raw: string, edition = 'yellow'): Journal {
       custom, marks };
   });
   if ((profiles.length && !seen.has(value.active)) || (!profiles.length && value.active !== '')) throw new Error('Unknown profile');
-  return { version: 1, edition, active: value.active, profiles };
+  return { version: 1, coordinateRevision: 2, edition, active: value.active, profiles };
 }

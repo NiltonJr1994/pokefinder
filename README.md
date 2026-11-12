@@ -4,6 +4,18 @@
 
 ## Português
 
+### Correção dos mapas · revisão Android 45002
+
+- Corrigida a conversão de coordenadas entre as peças e a imagem completa de Yellow, incluindo o deslocamento vertical de 28 unidades.
+- Removida a distribuição artificial de ações em grade. Cada pino publicado usa uma posição da referência ou uma área de encontro associada aos dados da edição.
+- Recortes das etapas agora abrangem as rotas e os interiores referenciados pelos pontos, sem deformar a imagem. Zoom ampliado e botão de ampliar coerente com o limite real.
+- Pontos sem posição confirmada continuam no Diário, com progresso e anotações; não recebem um pino inventado. Posições de ações dos remakes não são copiadas de plantas de gerações antigas.
+- Marcadores pessoais são convertidos para o novo enquadramento, preservando sua posição no mapa, status e notas. Backups antigos continuam aceitos.
+- Mantida a versão 4.5.0. Revisão interna 45002, assinada com a mesma chave de produção da compilação anterior.
+
+Limite conhecido: os mapas continuam usando as bases de referência existentes. As associações de áreas de encontro precisam de conferência durante o jogo; esta revisão não certifica cada evento de cada andar de todas as edições. Consulte THIRD_PARTY_MAPS.md para fontes, conversões e auditoria.
+
+
 O **PokeFinder** é um projeto independente de fã, desenvolvido pela **N. J. Softwares** para aprender desenvolvimento Android, organização de catálogos offline e design de interfaces. O app reúne e organiza informações já disponíveis na internet, complementadas por guias e arquivos de referência fornecidos ao projeto. As fontes estão listadas abaixo e os créditos também podem ser consultados no app.
 
 ### O que você encontra no app
@@ -53,6 +65,18 @@ O APK sem assinatura sai em `android/app/build/outputs/apk/release/app-release-u
 O PokeFinder é um projeto educacional e independente, sem afiliação ou endosso da The Pokémon Company, Nintendo, Creatures ou GAME FREAK. As marcas, personagens, imagens e demais materiais de terceiros pertencem aos respectivos titulares e estão sujeitos às suas condições de uso. Existe também uma ferramenta homônima de manipulação de RNG, mantida separadamente por Admiral-Fish. [Orientação do Pokémon Support sobre materiais da franquia](https://support.pokemon.com/hc/en-us/articles/360000634094-Can-I-use-Pok%C3%A9mon-images-or-materials) · [Admiral-Fish/PokeFinder](https://github.com/Admiral-Fish/PokeFinder)
 
 ## English
+
+### Map corrections · Android build revision 45002
+
+- Fixed coordinate conversion between Yellow's tiles and full image, including the 28-unit vertical offset.
+- Removed artificial grid placement. Published pins use a reference position or an encounter area associated with edition-specific data.
+- Stage crops now include referenced routes and interiors without stretching the artwork. Higher zoom and a zoom button that respects the actual limit.
+- Actions without confirmed coordinates remain in the Journal with progress and notes; they do not receive fabricated map pins. Remake action tiles are not transferred from older-generation layouts.
+- Personal markers are reprojected without changing their map position, status or notes. Older backups remain supported.
+- Version remains 4.5.0. Internal revision 45002 uses the same production signing key as the previous build.
+
+Known limit: existing reference artwork is retained. Encounter-area associations still need gameplay review; this revision does not certify every event on every floor in every edition. See THIRD_PARTY_MAPS.md for sources, conversion details and the audit.
+
 
 **PokeFinder** is an independent fan project developed by **N. J. Softwares** to learn Android development, offline catalog organization, and interface design. It collects and organizes information already available online, supplemented by guides and reference files provided to the project. Sources are listed below, and credits are also available in the app.
 

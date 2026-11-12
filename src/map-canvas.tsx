@@ -40,7 +40,7 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
   const frame = useRef({ screen, camera, fit: 1 });
   const anchor = useRef<{ finger: Sample; camera: Camera } | undefined>(undefined);
   const didLayout = useRef(false);
-  const maxZoom = area.id === 'region' ? 18 : 8;
+  const maxZoom = 24;
   const fit = Math.min(screen.width / area.width, screen.height / area.height) || 1;
   frame.current = { screen, camera, fit };
 
@@ -89,6 +89,7 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
   const tiles = area.regional ? regionTiles[area.regional + '_' + level] : area.illustrated ? yellowTiles[area.id][level] : [];
   const groups: { x: number; y: number; markers: Marker[] }[] = [];
   for (const marker of markers) {
+    if (marker.point.mapped === false) continue;
     const x = left + (marker.point.x - area.x) * scale;
     const y = top + (marker.point.y - area.y) * scale;
     if (x < -22 || y < -22 || x > screen.width + 22 || y > screen.height + 22) continue;
@@ -160,7 +161,7 @@ export function MapCanvas({ area, markers, placing, focus, onOpen, onPlace }: {
     </View>
     <View style={[layout.row, { position: 'absolute', right: 7, top: 7 }]}>
       <Button compact label="−" hint="Diminuir zoom" disabled={camera.zoom <= 1} onPress={() => zoomBy(1 / 1.5)} />
-      <Button compact label="" icon="add" hint="Aumentar zoom" disabled={camera.zoom >= 5} onPress={() => zoomBy(1.5)} />
+      <Button compact label="" icon="add" hint="Aumentar zoom" disabled={camera.zoom >= maxZoom} onPress={() => zoomBy(1.5)} />
       <Button compact label="" icon="locate-outline" hint="Centralizar mapa" onPress={() => apply(initial)} />
     </View>
   </View>;
