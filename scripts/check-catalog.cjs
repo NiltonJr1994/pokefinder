@@ -27,6 +27,7 @@ const mapImage = uri => {
 const tiles = loadSource('data/yellow-map-tiles.ts', mapImage).yellowTiles;
 const regionalTiles = loadSource('data/region-tiles.ts', mapImage).regionTiles;
 const updates = loadSource('updates.tsx', id => {
+  if (id === './app-update') return { useAppDownload: () => ({ download:{state:'idle'} }) };
   if (['react-native', './locale', './ui'].includes(id)) return {};
   if (id === 'react') return { useRef: current => ({ current }), useCallback: fn => fn, useEffect: () => {}, useState: value => [value, () => {}] };
   return localRequire(id);
@@ -38,6 +39,14 @@ const remoteNotes = updates.parseReleases([
   { tag_name: 'v9.0.0-beta', draft: false, prerelease: false },
 ]);
 assert.deepEqual(remoteNotes, [{ tag: '8.3.1', publishedTag: 'v8.3.1', body: 'Nota', revision: 0, apk: 'https://github.com/NiltonJr1994/pokefinder/releases/download/v8.3.1/PokeFinder-8.3.1-Android.apk' }]);
+const digestNote = updates.parseReleases([{ tag_name:'v4.6.0', body:'', draft:false, prerelease:false,
+ assets:[{name:'PokeFinder-4.6.0-Android-b46000.apk',browser_download_url:'https://github.com/NiltonJr1994/pokefinder/releases/download/v4.6.0/PokeFinder-4.6.0-Android-b46000.apk',digest:'sha256:'+'a'.repeat(64),size:12345}] }])[0];
+assert.equal(digestNote.digest,'a'.repeat(64));assert.equal(digestNote.size,12345);
+for (const url of ['https://evil.example/PokeFinder-4.6.0-Android.apk', 'http://github.com/NiltonJr1994/pokefinder/releases/download/v4.6.0/PokeFinder-4.6.0-Android.apk']) {
+ const note=updates.parseReleases([{tag_name:'v4.6.0',body:'',draft:false,prerelease:false,
+ assets:[{name:'PokeFinder-4.6.0-Android.apk',browser_download_url:url}]}])[0];assert.equal(note.apk,undefined);
+}
+
 let preferences = { remoteNotes, automatic: true, availableTag: '8.3.1', dismissedUpdate: '', nextCheck: 0, checkedVersion: '' };
 const saveUpdate = changes => { preferences = { ...preferences, ...changes }; };
 const nextRevision = require('../src/data/build.json').androidVersionCode + 1;

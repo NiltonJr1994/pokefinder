@@ -1,3 +1,15 @@
+## Atualizador integrado · Android 45003
+
+O projeto Android incluído já contém a integração nativa. Compile usando Gradle a partir de `android/` e assine com a chave de produção original. Não inclua essa chave, senhas ou arquivos `.dpapi` no repositório ou na release.
+
+Se for necessário regenerar o Android com Expo, o plugin local `plugins/with-app-updater.js` registra o módulo, a permissão REQUEST_INSTALL_PACKAGES e um FileProvider restrito à pasta do APK. O código nativo de origem está em `native/AppUpdaterModule.kt`. Após alterar esse arquivo, mantenha a cópia de `android/app/src/main/java/com/njsoftwares/pokecodefinder/AppUpdaterModule.kt` sincronizada; os testes verificam a igualdade.
+
+Mantenha público o repositório e publique uma release estável com tag `vMAJOR.MINOR.PATCH`. O APK assinado deve se chamar `PokeFinder-MAJOR.MINOR.PATCH-Android-bCODIGO.apk`. O código Android deve crescer a cada compilação distribuída. A API pública fornece URL, tamanho e, quando disponível, o digest SHA-256; não há token dentro do app. Nunca substitua o APK por outro com o mesmo código já distribuído.
+
+O download usa DownloadManager e armazenamento do próprio app. Não são solicitadas permissões gerais de arquivos. A instalação requer confirmação do sistema e, na primeira vez, autorização para instalar pelo PokeFinder. O instalador normalmente oferece Abrir; alguns aparelhos exigem abrir o ícone do app. Não há promessa de instalação silenciosa ou de reabertura automática. Uma troca de certificado ou pacote é recusada antes de abrir o instalador.
+
+Para distribuição futura pela Google Play, use o fluxo de atualização da loja e remova/adeque a instalação de APKs desta distribuição direta conforme as políticas aplicáveis.
+
 # Migração e validação do PokeFinder
 
 A interface, a navegação e a lógica do app foram portadas de Kotlin e Compose para React Native e TypeScript com Expo. O projeto Android gerado pelo Expo é usado para empacotamento e integração nativa. O app inicia pelo JavaScript empacotado no APK.

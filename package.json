@@ -26,7 +26,7 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "check": "tsc --noEmit && node scripts/check-catalog.cjs"
+    "check": "tsc --noEmit && node scripts/check-catalog.cjs && node scripts/check-updater.cjs"
   },
   "private": true
 }

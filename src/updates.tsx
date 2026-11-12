@@ -2,9 +2,10 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { Animated, AppState, ScrollView, View } from 'react-native';
 import { version } from '../package.json';
 import build from './data/build.json';
+import { useAppDownload } from './app-update';
 import history from './data/release-history.json';
 import { useLocale } from './locale';
-import { Button, Card, CopyText, layout, Link, Motion, Sheet, useTheme } from './ui';
+import { Button, Card, CopyText, layout, Motion, Sheet, useTheme } from './ui';
 
 const repo = 'NiltonJr1994/pokefinder';
 const releases = 'https://github.com/' + repo + '/releases';
@@ -18,7 +19,7 @@ const compare = (a: string, b: string) => {
   return left[0] - right[0] || left[1] - right[1] || left[2] - right[2];
 };
 
-type ReleaseNote = { tag: string; body: string; publishedTag: string; apk?: string; revision?: number };
+type ReleaseNote = { tag: string; body: string; publishedTag: string; apk?: string; revision?: number; digest?: string; size?: number };
 export type UpdatePrefs = {
   automatic: boolean; nextCheck: number; checkedVersion: string; remoteNotes: ReleaseNote[]; dismissedUpdate: string; availableTag: string;
 };
@@ -30,10 +31,13 @@ export function parseReleases(value: unknown): ReleaseNote[] {
       || !stable.test(row.tag_name.trim())) return [];
     const publishedTag = row.tag_name.trim();
     const tag = normalized(publishedTag);
-    const candidates = (Array.isArray(row.assets) ? row.assets : []).flatMap((asset: { name?: string; browser_download_url?: string }) => {
+    const candidates = (Array.isArray(row.assets) ? row.assets : []).flatMap((asset: { name?: string; browser_download_url?: string; digest?: string; size?: number }) => {
       const match = /^PokeFinder-(\d+\.\d+\.\d+)-Android(?:-b(\d{1,9}))?\.apk$/.exec(asset?.name ?? '');
       const url = releases + '/download/' + encodeURIComponent(publishedTag) + '/' + encodeURIComponent(asset?.name ?? '');
-      return match?.[1] === tag && asset.browser_download_url === url ? [{ apk: url, revision: Number(match[2] ?? 0) }] : [];
+      return match?.[1] === tag && asset.browser_download_url === url ? [{ apk: url, revision: Number(match[2] ?? 0),
+        ...(typeof asset.digest === 'string' && /^sha256:[a-fA-F0-9]{64}$/.test(asset.digest) ? { digest: asset.digest.slice(7).toLowerCase() } : {}),
+        ...(typeof asset.size === 'number' && Number.isSafeInteger(asset.size) && asset.size > 0 && asset.size <= 512 * 1024 * 1024 ? { size: asset.size } : {}),
+      }] : [];
     }).sort((a: { revision: number }, b: { revision: number }) => b.revision - a.revision);
     return [{ tag, publishedTag, body: typeof row.body === 'string' ? row.body.trim().slice(0, 18000) : '', ...candidates[0] }];
   });
@@ -43,6 +47,7 @@ const newer = (note: ReleaseNote) => compare(note.tag, version) > 0 ||
   (compare(note.tag, version) === 0 && (note.revision ?? 0) > build.androidVersionCode);
 
 export function useUpdates(prefs: UpdatePrefs, save: (changes: Partial<UpdatePrefs>) => void, ready: boolean) {
+  const transfer = useAppDownload();
   const busy = useRef(false);
   const started = useRef(false);
   const [checking, setChecking] = useState(false);
@@ -103,6 +108,9 @@ export function useUpdates(prefs: UpdatePrefs, save: (changes: Partial<UpdatePre
     notes: [...notes.values()].sort((a, b) => compare(b.tag, a.tag)),
     prompt: Boolean(tag && prefs.automatic && prefs.dismissedUpdate !== offer),
     dismiss: () => save({ dismissedUpdate: offer }),
+    transfer, download: (title: string) => tag && latest?.apk ? transfer.start({
+      url: latest.apk, tag, revision: latest.revision, digest: latest.digest, size: latest.size,
+    }, title) : Promise.resolve(),
     automatic: prefs.automatic,
     setAutomatic: (automatic: boolean) => save(automatic ? { automatic, nextCheck: 0 } : { automatic }),
   };
@@ -114,7 +122,7 @@ export function UpdatePrompt({ release, open }: { release: ReturnType<typeof use
     <CopyText>{tr('A versão {tag} está disponível. Deseja atualizar?', { tag: release.tag })}</CopyText>
     <View style={layout.wrap}>
       <Button label="Agora não" onPress={release.dismiss} />
-      <Button label="Atualizar" primary onPress={() => { release.dismiss(); open(); }} />
+      <Button label="Atualizar" primary onPress={() => { release.dismiss(); open(); void release.download(tr('Atualização do PokeFinder')); }} />
     </View>
   </Sheet>;
 }
@@ -143,9 +151,10 @@ export function Updates({ release }: { release: ReturnType<typeof useUpdates> })
     <CopyText kind="heading">Atualizações</CopyText>
     <Button label={release.checking ? 'Verificando…' : 'Verificar atualizações'} icon="refresh-outline" onPress={release.check} disabled={release.checking} />
     {!!release.status && <CopyText kind="muted">{release.status}</CopyText>}
-    {!!release.tag && <Card>
+    <DownloadProgress release={release} />
+    {!!release.tag && release.transfer.download.state === 'idle' && <Card>
       <CopyText kind="title">{tr('Atualização disponível · {tag}', { tag: release.tag })}</CopyText>
-      <Link label="Baixar atualização" url={release.url} />
+      {release.transfer.download.state === 'idle' && <Button label="Baixar atualização" primary icon="download-outline" onPress={() => void release.download(tr('Atualização do PokeFinder'))} />}
     </Card>}
     {release.notes.map(note => <Card key={note.tag}>
       <View style={layout.wrap}>
@@ -155,4 +164,60 @@ export function Updates({ release }: { release: ReturnType<typeof useUpdates> })
       <CopyText>{note.body.replace(/^#{1,6}\s+/gm, '').replace(/\*\*/g, '').replace(/^[-*] /gm, '• ') || tr('Notas indisponíveis.')}</CopyText>
     </Card>)}
   </ScrollView>;
+}
+
+
+function DownloadProgress({ release }: { release: ReturnType<typeof useUpdates> }) {
+  const { tr } = useLocale();
+  const t = useTheme();
+  const { download, installing, permission, install, cancel } = release.transfer;
+  if (download.state === 'idle') return null;
+  const percent = download.total > 0 ? Math.min(100, Math.max(0, download.received / download.total * 100)) : 0;
+  const error = download.error === 'storage' ? 'Não há espaço suficiente para a atualização.'
+    : ['invalid','signature','package','version'].includes(download.error ?? '')
+      ? 'O arquivo não passou na validação. Baixe a atualização novamente.'
+      : download.error === 'unsupported' ? 'A instalação integrada está disponível no aplicativo Android.'
+      : 'Não foi possível concluir a atualização. Verifique a conexão e tente novamente.';
+  return <Card>
+    <CopyText kind="title">{download.state === 'updated' ? tr('Atualização concluída · {tag}', { tag: download.tag })
+      : tr('Atualização · {tag}', { tag: download.tag })}</CopyText>
+    {['starting','downloading','paused'].includes(download.state) && <>
+      <CopyText>{download.state === 'paused' ? tr('Download pausado. Será retomado quando possível.')
+        : download.state === 'starting' ? tr('Preparando download…') : percent >= 100 && download.total > 0 ? tr('Validando arquivo…') : tr('Baixando atualização…')}</CopyText>
+      <View accessible accessibilityRole="progressbar" accessibilityLabel={tr('Baixando atualização…')}
+        accessibilityValue={download.total > 0 ? { min:0, max:100, now:Math.round(percent) } : { text:tr('Preparando download…') }}
+        style={{ height:8, backgroundColor:t.line, borderRadius:8, overflow:'hidden' }}>
+        <View style={{ height:8, width: `${percent}%`, backgroundColor:t.red }} />
+      </View>
+      <CopyText kind="muted">{download.total > 0 ? `${Math.floor(percent)}% · ${(download.received/1048576).toFixed(1)} / ${(download.total/1048576).toFixed(1)} MB`
+        : `${(download.received/1048576).toFixed(1)} MB`}</CopyText>
+      <Button label="Cancelar download" onPress={() => void cancel()} />
+    </>}
+    {download.state === 'ready' && <>
+      <CopyText>Download concluído e arquivo validado.</CopyText>
+      <CopyText>Confirme a instalação na tela do Android. O app será fechado durante a atualização. Ao terminar, toque em Abrir para iniciar a nova versão.</CopyText>
+      {permission && <CopyText>Autorize a instalação pelo PokeFinder nas configurações do Android e volte ao app.</CopyText>}
+      <Button primary label={installing ? 'Preparando instalação…' : permission ? 'Permitir instalação' : 'Instalar atualização'}
+        icon="download-outline" disabled={installing} onPress={() => void install()} />
+      <Button label="Excluir download" disabled={installing} onPress={() => void cancel()} />
+    </>}
+    {download.state === 'error' && <>
+      <CopyText>{error}</CopyText>
+      {!!release.tag && <Button primary label="Tentar novamente" onPress={() => void release.download(tr('Atualização do PokeFinder'))} />}
+      <Button label="Excluir download" onPress={() => void cancel()} />
+    </>}
+    {download.state === 'updated' && <>
+      <CopyText>A nova versão já está em execução. Seus dados foram preservados.</CopyText>
+      <Button label="OK" onPress={() => void cancel()} />
+    </>}
+  </Card>;
+}
+
+export function UpdateFinishedPrompt({ release }: { release: ReturnType<typeof useUpdates> }) {
+  const { tr } = useLocale();
+  return <Sheet title="Atualização concluída" close={() => void release.transfer.cancel()}>
+    <CopyText>{tr('Atualização concluída · {tag}', { tag: release.transfer.download.tag })}</CopyText>
+    <CopyText>A nova versão já está em execução. Seus dados foram preservados.</CopyText>
+    <Button label="Continuar" primary onPress={() => void release.transfer.cancel()} />
+  </Sheet>;
 }

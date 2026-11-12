@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  AccessibilityInfo, BackHandler, Linking, View, useColorScheme, useWindowDimensions,
+  AccessibilityInfo, BackHandler, View, useColorScheme, useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -10,7 +10,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { available, byId, editions, type Edition, type Machine, type Section, sections } from './src/catalog';
 import { Dex, PokemonDetail } from './src/dex';
 import { CheatHelp, Credits, Help, Welcome } from './src/extras';
-import { Updates, UpdatePrompt, useUpdates, type UpdatePrefs } from './src/updates';
+import { Updates, UpdatePrompt, UpdateFinishedPrompt, useUpdates, type UpdatePrefs } from './src/updates';
 import { Entries, Items, MachineDetail, Machines } from './src/reference';
 import { brand, Button, CopyText, dark, layout, light, logo, Motion, Theme, useTheme } from './src/ui';
 import { Drawer, Logo, MainTabs, sectionIcons } from './src/navigation';
@@ -209,9 +209,9 @@ function Finder({ prefs, save, release }: {
     <Drawer visible={drawer} edition={edition} route={route} picking={editionList} tag={release.tag}
       onPick={setEditionList} onGame={changeGame} onRoute={selectSection} onClose={closeDrawer} />
     {intro >= 0 && <Welcome page={intro} select={setIntro} close={closeIntro} />}
-    {intro < 0 && !drawer && !editionList && release.prompt && <UpdatePrompt release={release} open={() => {
+    {intro < 0 && !drawer && !editionList && release.transfer.download.state === 'updated' && <UpdateFinishedPrompt release={release} />}
+    {intro < 0 && !drawer && !editionList && release.prompt && release.transfer.download.state !== 'updated' && <UpdatePrompt release={release} open={() => {
       selectSection('updates');
-      void Linking.openURL(release.url).catch(() => {});
     }} />}
   </SafeAreaView>;
 }

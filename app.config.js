@@ -2,7 +2,7 @@ const production = process.env.POKEFINDER_PRODUCTION === '1';
 module.exports = {
   name: production ? 'PokeFinder' : 'PokeFinder Teste',
   slug: 'pokefinder',
-  plugins: ['expo-image', 'expo-font', 'expo-sharing', ['expo-splash-screen', {
+  plugins: ['./plugins/with-app-updater', 'expo-image', 'expo-font', 'expo-sharing', ['expo-splash-screen', {
     backgroundColor: '#FFF9EE',
     image: './assets/splash-placeholder.png',
     imageWidth: 12,

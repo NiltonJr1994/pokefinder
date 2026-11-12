@@ -4,6 +4,19 @@
 
 ## Português
 
+### Atualização dentro do app · revisão Android 45003
+
+- O botão Atualizar baixa o APK dentro do PokeFinder, sem abrir o navegador. A tela mostra progresso, tamanho do arquivo, cancelamento e nova tentativa.
+- O download é mantido pelo Android e pode ser retomado após fechar o app. O arquivo concluído fica disponível para instalação posterior.
+- Antes da instalação, são conferidos o pacote, a assinatura de produção, a versão, o tamanho informado e, quando fornecido pela release, o SHA-256.
+- Ao tocar em Instalar atualização, o Android pede a autorização de instalação por esta fonte, caso ainda não tenha sido concedida, e apresenta sua confirmação de instalação.
+- O app avisa que será fechado durante a substituição. Ao terminar, toque em Abrir no instalador ou abra o PokeFinder normalmente. Na primeira abertura, o app confirma que a nova versão está em execução.
+- O app não tenta instalar silenciosamente nem forçar a abertura em segundo plano. As confirmações e a reabertura seguem as regras do Android e podem variar entre aparelhos.
+- Mantida a versão 4.5.0, com revisão interna 45003 e a mesma assinatura de produção. Histórico e dados do usuário são preservados pela atualização normal.
+
+Quem usa 45002 ou anterior precisa instalar esta compilação uma vez pelo fluxo antigo. O novo download integrado será utilizado nas próximas atualizações. Não é necessário configurar API ou token.
+
+
 ### Correção dos mapas · revisão Android 45002
 
 - Corrigida a conversão de coordenadas entre as peças e a imagem completa de Yellow, incluindo o deslocamento vertical de 28 unidades.
@@ -65,6 +78,19 @@ O APK sem assinatura sai em `android/app/build/outputs/apk/release/app-release-u
 O PokeFinder é um projeto educacional e independente, sem afiliação ou endosso da The Pokémon Company, Nintendo, Creatures ou GAME FREAK. As marcas, personagens, imagens e demais materiais de terceiros pertencem aos respectivos titulares e estão sujeitos às suas condições de uso. Existe também uma ferramenta homônima de manipulação de RNG, mantida separadamente por Admiral-Fish. [Orientação do Pokémon Support sobre materiais da franquia](https://support.pokemon.com/hc/en-us/articles/360000634094-Can-I-use-Pok%C3%A9mon-images-or-materials) · [Admiral-Fish/PokeFinder](https://github.com/Admiral-Fish/PokeFinder)
 
 ## English
+
+### In-app updates · Android build revision 45003
+
+- Update now downloads the APK inside PokeFinder without opening a browser. The screen shows progress, file size, cancellation and retry.
+- Android manages the download, allowing it to continue across app closure and to be installed later.
+- Package identity, production signing certificate, newer version, advertised size and the release SHA-256, when supplied, are checked before installation.
+- Install update opens Android's installation authorization if necessary, followed by the system installation confirmation.
+- The app explains that it will close during replacement. When finished, tap Open in the installer or launch PokeFinder normally. The first launch confirms that the new version is running.
+- Silent installation and forced background reopening are not attempted. Confirmation and reopening follow Android rules and can vary by device.
+- Version remains 4.5.0, internal revision 45003, with the same production signing key. A normal update preserves user data and history.
+
+Users on 45002 or earlier need to install this build once through the previous update flow. Subsequent updates will use the integrated download. No API setup or token is required.
+
 
 ### Map corrections · Android build revision 45002
 
